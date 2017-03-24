@@ -1,20 +1,26 @@
 'use strict'
 
-const electron = require('electron')
-const app = electron.app
-const Tray = electron.Tray;
-const dialog = require('electron').dialog
-const ipc = require('electron').ipcMain
 const path = require('path')
-const pjson = require('./package.json')
+const url = require('url')
 const _ = require('lodash')
-const windowStateKeeper = require('electron-window-state');
 
-const Menu = require('electron').Menu; 
+const electron = require('electron')
+const {app, Tray, dialog, Menu} = electron
+const ipc = electron.ipcMain
+
+const windowStateKeeper = require('electron-window-state')
+const autoUpdater = require('electron-updater').autoUpdater
+const log = require('electron-log')
+autoUpdater.logger = log
+autoUpdater.logger.transports.file.level = 'info'
+// autoUpdater.autoDownload = false
+autoUpdater.autoDownload = true
+let isReadyToUpdate = false
+
+const pjson = require('./package.json')
 
 // Use system log facility, should work on Windows too
-require('./lib/log')(pjson.productName || 'SkelEktron');
-
+require('./lib/log')(pjson.productName || 'SkelEktron')
 
 // Manage unhandled exceptions as early as possible
 process.on('uncaughtException', (e) => {
@@ -23,10 +29,9 @@ process.on('uncaughtException', (e) => {
   app.quit()
 })
 
-
 // Load build target configuration file
 try {
-  var config = require('./config.json')
+  let config = require('./config.json')
   _.merge(pjson.config, config)
 } catch (e) {
   console.warn('No config file loaded, using defaults')
@@ -45,23 +50,28 @@ console.debug(JSON.stringify(pjson.config))
 
 // Adds debug features like hotkeys for triggering dev tools and reload
 // (disabled in production, unless the menu item is displayed)
-require('electron-debug')({
-  enabled: pjson.config.debug || isDev || false
-})
+const isElectronDebugEnabled = pjson.config.debug || isDev || false
+if (isElectronDebugEnabled) {
+  require('electron-debug')({
+    enabled: isElectronDebugEnabled
+  })
+}
 
 // Prevent window being garbage collected
 let mainWindow
 
 app.setName(pjson.productName || 'Mooltipass')
 
+initialize()
+
 function initialize () {
-  var shouldQuit = makeSingleInstance()
+  let shouldQuit = makeSingleInstance()
   if (shouldQuit) return app.quit()
 
   function onClosed () {
     // Dereference used windows
     // for multiple windows store them in an array
-    mainWindow = null;
+    mainWindow = null
   }
 
   function createMainWindow () {
@@ -78,41 +88,45 @@ function initialize () {
       'x': mainWindowState.x,
       'y': mainWindowState.y,
       'title': app.getName(),
-      'icon': path.join(__dirname, '/chrome_app/images/icons/AppIcon_128.png'),
+      'icon': path.join(__dirname, 'chrome_app', 'images', 'icons', 'AppIcon_128.png'),
       'show': false, // Hide your application until your page has loaded
       'webPreferences': {
         'nodeIntegration': pjson.config.nodeIntegration || true, // Disabling node integration allows to use libraries such as jQuery/React, etc
-        'preload': path.resolve(path.join(__dirname, 'preload.js'))
+        'preload': path.join(__dirname, 'preload.js')
       }
-    });
+    })
 
     // works only on Windows and Linux
-    win.setMenu(null);
-    win.setResizable(false);
-    win.setSize(820, 620);
+    win.setMenu(null)
+    win.setResizable(false)
+    win.setSize(820, 620)
 
     // Let us register listeners on the window, so we can update the state
     // automatically (the listeners will be removed when the window is closed)
     // and restore the maximized or full screen state
-    mainWindowState.manage(win);
+    mainWindowState.manage(win)
 
     // EXPERIMENTAL: Minimize to tray
-    win.on('minimize',function(event){
-      event.preventDefault();
-      win.hide();
-    });
+    win.on('minimize', function (event) {
+      event.preventDefault()
+      win.hide()
+    })
 
     // EXPERIMENTAL: Minimize to tray
     win.on('close', function (event) {
-      if( !app.isQuiting ) {
+      if (!app.isQuiting) {
         event.preventDefault()
-        win.hide();
-        app.dock.hide();
+        win.hide()
+        if (process.platform === 'darwin') app.dock.hide()
       }
-      return false;
-    });
+      return false
+    })
 
-    win.loadURL(`file://${__dirname}/${pjson.config.url}`, {})
+    win.loadURL(url.format({
+      pathname: path.join(__dirname, pjson.config.url),
+      protocol: 'file:',
+      slashes: true
+    }))
 
     win.on('closed', onClosed)
 
@@ -139,6 +153,7 @@ function initialize () {
       }
 
       error.sender.loadURL(`file://${__dirname}/error.html`)
+
       win.webContents.on('did-finish-load', () => {
         win.webContents.send('app-error', errorMessage)
       })
@@ -159,64 +174,40 @@ function initialize () {
   })
 
   app.on('activate', () => {
-    setTimeout( function() {
+    setTimeout(function () {
       if (!mainWindow) {
         mainWindow = createMainWindow()
       }
-    }.bind(this),500);
+    }, 500)
   })
 
-  let tray = null;
+  let tray = null
   app.on('ready', () => {
-    mainWindow = createMainWindow();
+    mainWindow = createMainWindow()
 
-    tray = new Tray( path.join(__dirname, '../chrome_app/images/icons/icon_cross_16.png') );
+    tray = new Tray(path.join(__dirname, 'chrome_app', 'images', 'icons', 'icon_cross_16.png'))
 
-    var contextMenu = Menu.buildFromTemplate([
-        { label: 'Show App', click:  function(){
-            mainWindow.show();
-            app.dock.show();
-        } },
-        { label: 'Quit', click:  function(){
-            app.isQuiting = true;
-            app.quit();
-        } }
-    ]);
+    const contextMenu = Menu.buildFromTemplate([
+      {
+        label: 'Show App',
+        click: function () {
+          mainWindow.show()
+          if (process.platform === 'darwin') app.dock.show()
+        }
+      },
+      {
+        label: 'Quit',
+        click: function () {
+          app.isQuiting = true
+          app.quit()
+        }
+      }
+    ])
 
-    tray.setToolTip('Open or Quit MooltiApp');
-    tray.setContextMenu(contextMenu);
+    tray.setToolTip('Open or Quit MooltiApp')
+    tray.setContextMenu(contextMenu)
 
-    // Manage automatic updates
-    try {
-      require('./lib/auto-update/update')({
-        url: (pjson.config.update) ? pjson.config.update.url || false : false,
-        version: app.getVersion()
-      })
-      ipc.on('update-downloaded', (autoUpdater) => {
-        // Elegant solution: display unobtrusive notification messages
-        mainWindow.webContents.send('update-downloaded')
-        ipc.on('update-and-restart', () => {
-          autoUpdater.quitAndInstall()
-        })
-
-        // Basic solution: display a message box to the user
-        // var updateNow = dialog.showMessageBox(mainWindow, {
-        //   type: 'question',
-        //   buttons: ['Yes', 'No'],
-        //   defaultId: 0,
-        //   cancelId: 1,
-        //   title: 'Update available',
-        //   message: 'There is an update available, do you want to restart and install it now?'
-        // })
-        //
-        // if (updateNow === 0) {
-        //   autoUpdater.quitAndInstall()
-        // }
-      })
-    } catch (e) {
-      console.error(e.message)
-      dialog.showErrorBox('Update Error', e.message)
-    }
+    autoUpdater.checkForUpdates()
   })
 
   app.on('will-quit', () => { })
@@ -238,6 +229,19 @@ function makeSingleInstance () {
   })
 }
 
-// Manage Squirrel startup event (Windows)
-require('./lib/auto-update/startup')(initialize)
-
+autoUpdater.on('update-downloaded', (event, info) => {
+  // log.info('@update-downloaded@\n', info, event)
+  isReadyToUpdate = true
+  // Ask user to update the app
+  dialog.showMessageBox({
+    type: 'question',
+    buttons: ['Install and Relaunch', 'Later'],
+    defaultId: 0,
+    message: 'A new version of ' + app.getName() + ' has been downloaded',
+    detail: 'It will be installed when you restart the application'
+  }, response => {
+    if (response === 0) {
+      setTimeout(() => autoUpdater.quitAndInstall(), 7)
+    }
+  })
+})

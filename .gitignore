@@ -3,3 +3,6 @@ node_modules
 .idea
 npm-debug.log
 app/config.json
+yarn.lock
+
+Task.md

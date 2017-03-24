@@ -8,20 +8,16 @@
   },
   "license": "MIT",
   "main": "main.js",
-  "electronVersion": "1.0.0",
   "dependencies": {
-    "devtron": "^1",
-    "electron-debug": "^1",
     "electron-is-dev": "^0.1",
+    "electron-log": "^2.0.0",
+    "electron-updater": "^1.11.0",
     "electron-window-state": "^3",
     "lodash": "^4",
-    "websocket": "^1.0.24",
-    "node-hid": "^0.5.4"
+    "node-hid": "^0.5.4",
+    "websocket": "^1.0.24"
   },
   "config": {
-    "url": "../chrome_app/html/index.html",
-    "update": {
-      "url": false
-    }
+    "url": "chrome_app/html/index.html"
   }
 }
