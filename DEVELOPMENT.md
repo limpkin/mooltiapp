@@ -4,7 +4,7 @@ layout
 
 	build/ - resources for installer, don't change file names names there
 	electron-builder.json - main build config
-	sync.js - fetches version from for build, and installs app/package.json "dependencies"
+	butil.js - fetches version from for build, and installs app/package.json "dependencies"
 	.travis.yml - CI config
 	appveyor.yml - CI config
 	app/
