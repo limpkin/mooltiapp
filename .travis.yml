@@ -40,7 +40,8 @@ before_install:
   - export PATH="$HOME/.yarn/bin:$PATH"
   # Use sed to replace the SSH URL with the public URL, then initialize submodules
 #  - sed -ie 's/git@github.com:/https:\/\/github.com\//' .gitmodules
-  - git submodule update --init --recursive --depth=1
+#  - git submodule update --init --recursive --depth=1
+  - git submodule update --init --depth=1
 
 install:
   - nvm install 7

@@ -23,7 +23,8 @@ install:
 
 before_build:
 #  - ps: (gc .\.gitmodules) -replace 'git@github.com:','https://github.com/' | Out-File -encoding ASCII .gitmodules
-  - cmd: git submodule update --init --recursive --depth=1
+#  - cmd: git submodule update --init --recursive --depth=1
+  - cmd: git submodule update --init --depth=1
 
 build_script:
   - yarn run ciprep
