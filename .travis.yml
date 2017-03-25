@@ -26,6 +26,9 @@ addons:
       - icnsutils
       - graphicsmagick
       - xz-utils
+      - libusb-1.0-0
+      - libusb-1.0-0-dev
+      - libudev-dev
 
 # Handle git submodules yourself
 git:
@@ -36,7 +39,7 @@ before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$PATH"
   # Use sed to replace the SSH URL with the public URL, then initialize submodules
-  - sed -ie 's/git@github.com:/https:\/\/github.com\//' .gitmodules
+#  - sed -ie 's/git@github.com:/https:\/\/github.com\//' .gitmodules
   - git submodule update --init --recursive --depth=1
 
 install:
