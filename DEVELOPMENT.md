@@ -1,6 +1,6 @@
 ## Setup
 
-layout
+Repo layout:
 
 	build/ - resources for installer, don't change file names names there
 	electron-builder.json - main build config
@@ -9,12 +9,11 @@ layout
 	appveyor.yml - CI config
 	app/
 	app/chrome_app links to -> ../../chrome_app/
-
-Currently CI build are activated from pushing to this repo, not from draw.io.
+	mooltipass/ - git submodule, referencing github.com/limpkin/mooltipass repo
 
 ## High level workflow
 
-1) You push to repo
+1) You push to repo, (tip: add [ci skip] in commit msg to skip build)
 
 2) git hook activates CI, and CI performs build 
 
