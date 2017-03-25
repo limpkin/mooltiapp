@@ -9,14 +9,16 @@ const {app, Tray, dialog, Menu} = electron
 const ipc = electron.ipcMain
 
 const windowStateKeeper = require('electron-window-state')
-const autoUpdater = require('electron-updater').autoUpdater
+const {autoUpdater} = require('electron-updater')
 const log = require('electron-log')
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 // autoUpdater.autoDownload = false
 autoUpdater.autoDownload = true
 let isReadyToUpdate = false
-
+// Prevent objects being garbage collected
+let mainWindow = null
+let tray = null
 const pjson = require('./package.json')
 
 // Use system log facility, should work on Windows too
@@ -28,6 +30,11 @@ process.on('uncaughtException', (e) => {
   dialog.showErrorBox('Caught unhandled exception', e.message || 'Unknown error message')
   app.quit()
 })
+
+let shouldQuit = makeSingleInstance()
+if (shouldQuit) {
+  app.quit()
+}
 
 // Load build target configuration file
 try {
@@ -57,17 +64,11 @@ if (isElectronDebugEnabled) {
   })
 }
 
-// Prevent window being garbage collected
-let mainWindow
-
 app.setName(pjson.productName || 'Mooltipass')
 
 initialize()
 
 function initialize () {
-  let shouldQuit = makeSingleInstance()
-  if (shouldQuit) return app.quit()
-
   function onClosed () {
     // Dereference used windows
     // for multiple windows store them in an array
@@ -181,7 +182,6 @@ function initialize () {
     }, 500)
   })
 
-  let tray = null
   app.on('ready', () => {
     mainWindow = createMainWindow()
 
