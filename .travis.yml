@@ -42,10 +42,9 @@ before_install:
 install:
   - nvm install 7
   - yarn install
-  - yarn run ciprep
 
 script:
-  - yarn run sync
+  - yarn run ciprep
   - yarn run release
 
 branches:
