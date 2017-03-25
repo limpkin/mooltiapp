@@ -1,3 +1,9 @@
+
+[![Build Status](https://travis-ci.org/mediaslav/mooltiapp.svg?branch=master)](https://travis-ci.org/mediaslav/mooltiapp)
+
+[![Build status](https://ci.appveyor.com/api/projects/status/dcgiu6o1nn39hrqo?svg=true)](https://ci.appveyor.com/project/mediaslav/mooltiapp)
+
+
 # Mooltiapp
 
 Starting / Building the App - Windows
