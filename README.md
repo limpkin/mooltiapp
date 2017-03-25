@@ -1,7 +1,7 @@
 
-[![Build Status](https://travis-ci.org/mediaslav/mooltiapp.svg?branch=master)](https://travis-ci.org/mediaslav/mooltiapp)
+[![Build Status](https://travis-ci.org/limpkin/mooltiapp.svg?branch=master)](https://travis-ci.org/limpkin/mooltiapp)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/dcgiu6o1nn39hrqo?svg=true)](https://ci.appveyor.com/project/mediaslav/mooltiapp)
+[![Build status](https://ci.appveyor.com/api/projects/status/nce8eenqf1wq9f92?svg=true)](https://ci.appveyor.com/project/limpkin/mooltiapp)
 
 
 # Mooltiapp
