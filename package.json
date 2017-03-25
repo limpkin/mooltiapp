@@ -5,13 +5,14 @@
   "license": "MIT",
   "main": "main.js",
   "scripts": {
-    "test": "standard && mocha --recursive",
+    "~test": "standard && mocha --recursive",
     "unit": "standard && mocha test/unit --recursive",
     "integration": "standard && mocha test/integration --recursive",
     "coverage": "istanbul cover node_modules/.bin/_mocha -- --recursive",
     "depcheck": "dependency-check app --entry main.js --unused --no-dev",
     "lint": "standard",
-    "start": "electron ./app/main",
+    "fix": "standard --fix",
+    "start": "electron ./app",
     "clean:linux": "rimraf dist/linux* dist/*.deb dist/*.AppImage",
     "clean:osx": "rimraf dist/mac",
     "clean:win": "rimraf dist/win*",
@@ -26,7 +27,13 @@
     "build:linux": "npm run prebuild && build --linux deb AppImage --x64 && npm run postbuild",
     "build": "build",
     "postbuild": "node build/target.js --clean",
-    "postinstall": "install-app-deps && electron-rebuild --force"
+    "prerelease": "node build/target.js",
+    "release": "build",
+    "postrelease": "node build/target.js --clean",
+    "postinstall": "install-app-deps && electron-rebuild --force --module-dir app",
+    "erb": "electron-rebuild --force --module-dir app",
+    "sync": "node ./butil.js syncver",
+    "ciprep": "node ./butil.js linkapp syncver"
   },
   "standard": {
     "globals": [
@@ -37,57 +44,37 @@
       "beforeEach",
       "afterEach",
       "rm",
-      "cp"
+      "cp",
+      "Event",
+      "localStorage",
+      "$",
+      "Blob",
+      "FileReader"
+    ],
+    "ignore": [
+      "/.idea/",
+      "/mooltipass/",
+      "/build/",
+      "/dist/",
+      "/app/chrome_app/"
     ]
-  },
-  "pre-commit": [
-    "lint",
-    "unit"
-  ],
-  "build": {
-    "appId": "com.limpkin.mooltiapp",
-    "productName": "Mooltipass",
-    "dmg": {
-      "iconSize": 120,
-      "iconTextSize": 14,
-      "contents": [
-        {
-          "x": 478,
-          "y": 170,
-          "type": "link",
-          "path": "/Applications"
-        },
-        {
-          "x": 130,
-          "y": 170,
-          "type": "file"
-        }
-      ]
-    },
-    "mac": {
-      "category": "public.app-category.business"
-    },
-    "linux": {
-      "category": "Development"
-    },
-    "win": {},
-    "iconUrl": "https://github.com/limpkin/mooltipass/blob/master/chrome_app/images/icons/Plain_128.png?raw=true"
   },
   "devDependencies": {
     "async": "^2",
     "dependency-check": "^2",
-    "electron": "^1.6",
-    "electron-builder": "^7",
-    "electron-chromedriver": "^1.6.0",
+    "electron": "^1.6.4",
+    "electron-builder": "^16.3.1",
+    "electron-debug": "^1.1.0",
     "electron-rebuild": "^1.5.7",
     "pre-commit": "^1",
     "rimraf": "^2",
     "shelljs": "^0.7",
-    "spectron": "^3",
-    "standard": "^8"
+    "standard": "^9.0.2",
+    "@types/core-js": "latest",
+    "@types/node": "latest",
+    "@types/electron": "latest",
+    "@types/electron-builder": "latest"
   },
   "dependencies": {
-    "node-hid": "^0.5.4",
-    "websocket": "^1.0.24"
   }
 }

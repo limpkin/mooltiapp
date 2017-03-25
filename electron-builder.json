@@ -1,0 +1,61 @@
+{
+  "appId": "com.limpkin.mooltiapp",
+  "productName": "Mooltipass",
+  "artifactName": "${productName}-${arch}-${version}.${ext}",
+  "asar": true,
+  "files": [
+    "**/*",
+    "!**/node_modules/*/build{,/**}",
+    "**/node_modules/*/build/Release/*.node",
+    "!**/node_modules/node-hid/{src,hidapi}{,/**}",
+    "!**/node_modules/nan{,/**}",
+    "!**/node_modules/underscore/underscore-min.js",
+    "!**/*.{map,ts}"
+  ],
+  "dmg": {
+    "iconSize": 120,
+    "iconTextSize": 14,
+    "contents": [
+      {
+        "x": 478,
+        "y": 170,
+        "type": "link",
+        "path": "/Applications"
+      },
+      {
+        "x": 130,
+        "y": 170,
+        "type": "file"
+      }
+    ]
+  },
+  "mac": {
+    "category": "public.app-category.business",
+    "target": [
+      "zip",
+      "dmg"
+    ]
+  },
+  "linux": {
+    "category": "Development",
+    "maintainer": "mooltipass <info@themooltipass.com>",
+    "target": [
+      "AppImage",
+      "deb"
+    ]
+  },
+  "win": {
+    "target": [
+      "nsis"
+    ]
+  },
+  "nsis": {
+    "perMachine": true,
+    "unicode": false
+  },
+  "publish": [
+    {
+      "provider": "github"
+    }
+  ]
+}
