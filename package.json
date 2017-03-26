@@ -64,7 +64,7 @@
     "async": "^2",
     "dependency-check": "^2",
     "electron": "^1.6.4",
-    "electron-builder": "^16.3.1",
+    "electron-builder": "^16.4.0",
     "electron-debug": "^1.1.0",
     "electron-rebuild": "^1.5.7",
     "pre-commit": "^1",
