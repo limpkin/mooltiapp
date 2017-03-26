@@ -5,6 +5,24 @@
 
 # Mooltiapp
 
+Prerequisites - Linux
+---------------------
+
+Add NodeJs PPA:
+
+    sudo apt-get install python-software-properties curl
+	curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+	
+Install Node.js and NPM:
+
+    sudo apt-get install nodejs
+	
+Install the required packages:
+
+    sudo apt-get install libusb-1.0-0-dev libusb-1.0-0 libudev-dev git
+	sudo npm i -g node-gyp node-pre-gyp electron
+
+
 Prerequisites
 -------------
 
