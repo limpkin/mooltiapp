@@ -100,13 +100,17 @@ Add %USERPROFILE%\.windows-build-tools\python27 to PATH, like PowerShell:
 
 ### Linux
 
+Setup correct node name
+    
+    sudo ln -s /usr/bin/nodejs /usr/bin/node
+    
 For install builder
     
     sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
     
 For native modules
     
-    npm i -g node-gyp node-pre-gyp
+    sudo npm i -g node-gyp node-pre-gyp
     
 Add the udev rule: see https://www.themooltipass.com/udev_rule.txt
 
