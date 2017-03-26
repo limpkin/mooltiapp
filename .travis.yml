@@ -32,7 +32,7 @@ addons:
 
 # Handle git submodules yourself
 git:
-    depth: 1
+#    depth: 1
     submodules: false
 
 before_install:
@@ -42,7 +42,7 @@ before_install:
   # Use sed to replace the SSH URL with the public URL, then initialize submodules
 #  - sed -ie 's/git@github.com:/https:\/\/github.com\//' .gitmodules
 #  - git submodule update --init --recursive --depth=1
-  - git submodule update --init --depth=1
+  - git submodule update --init
 
 install:
   - nvm install 7

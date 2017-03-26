@@ -18,7 +18,7 @@ clone_script:
   - cmd: git checkout -qf %APPVEYOR_REPO_COMMIT%
 #  - ps: (gc .\.gitmodules) -replace 'git@github.com:','https://github.com/' | Out-File -encoding ASCII .gitmodules
 #  - cmd: git submodule update --init --recursive --depth=1
-  - cmd: git submodule update --init --depth=1
+  - cmd: git submodule update --init
 
 install:
   - ps: Install-Product node 7 x64
