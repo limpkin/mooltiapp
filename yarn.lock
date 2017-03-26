@@ -713,22 +713,22 @@ electron-builder-core@15.6.3:
   version "15.6.3"
   resolved "https://registry.yarnpkg.com/electron-builder-core/-/electron-builder-core-15.6.3.tgz#c43e5ed38d249317a5bcf21c2c1d56ba1bf9ed3a"
 
-electron-builder-http@15.6.3, electron-builder-http@~15.6.3:
-  version "15.6.3"
-  resolved "https://registry.yarnpkg.com/electron-builder-http/-/electron-builder-http-15.6.3.tgz#f941a9b25245a3ae678eeb11e02cce59759402e6"
+electron-builder-http@16.4.0, electron-builder-http@~16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/electron-builder-http/-/electron-builder-http-16.4.0.tgz#9be0088736120801c18deb79c9f0532af62e94cb"
   dependencies:
     debug "2.6.3"
     fs-extra-p "^4.1.0"
 
-electron-builder-util@16.0.0, electron-builder-util@~16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/electron-builder-util/-/electron-builder-util-16.0.0.tgz#c8e87676a7cf7085ad75433335c10b58518dcfa7"
+electron-builder-util@16.4.0, electron-builder-util@~16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/electron-builder-util/-/electron-builder-util-16.4.0.tgz#9f79640f5ed694c7998bb096363308f7f09f04a1"
   dependencies:
     "7zip-bin" "^2.0.4"
     bluebird-lst "^1.0.2"
     chalk "^1.1.3"
     debug "2.6.3"
-    electron-builder-http "~15.6.3"
+    electron-builder-http "~16.4.0"
     fs-extra-p "^4.1.0"
     ini "^1.3.4"
     is-ci "^1.0.10"
@@ -737,9 +737,9 @@ electron-builder-util@16.0.0, electron-builder-util@~16.0.0:
     stat-mode "^0.2.2"
     tunnel-agent "^0.6.0"
 
-electron-builder@^16.3.1:
-  version "16.3.1"
-  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-16.3.1.tgz#f7d9a85a82cadc71e3ed55c861bbf1f94e3289bd"
+electron-builder@^16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/electron-builder/-/electron-builder-16.4.0.tgz#83198fe1e60b305aa5923287171bbc0ac9947415"
   dependencies:
     "7zip-bin" "^2.0.4"
     ajv "^5.0.4-beta.0"
@@ -749,11 +749,11 @@ electron-builder@^16.3.1:
     chromium-pickle-js "^0.2.0"
     cuint "^0.2.2"
     electron-builder-core "15.6.3"
-    electron-builder-http "15.6.3"
-    electron-builder-util "16.0.0"
+    electron-builder-http "16.4.0"
+    electron-builder-util "16.4.0"
     electron-download-tf "4.1.1"
     electron-macos-sign "~1.6.0"
-    electron-publish "16.0.0"
+    electron-publish "16.4.0"
     fs-extra-p "^4.1.0"
     hosted-git-info "^2.4.1"
     is-ci "^1.0.10"
@@ -822,14 +822,14 @@ electron-macos-sign@~1.6.0:
     isbinaryfile "^3.0.2"
     plist "^2.0.1"
 
-electron-publish@16.0.0:
-  version "16.0.0"
-  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-16.0.0.tgz#5caa8d17e76e55725e0e137e7fd21824d34d473a"
+electron-publish@16.4.0:
+  version "16.4.0"
+  resolved "https://registry.yarnpkg.com/electron-publish/-/electron-publish-16.4.0.tgz#e02ff2a6095c29983d9e150515d69f2bde90a908"
   dependencies:
     bluebird-lst "^1.0.2"
     chalk "^1.1.3"
-    electron-builder-http "~15.6.3"
-    electron-builder-util "~16.0.0"
+    electron-builder-http "~16.4.0"
+    electron-builder-util "~16.4.0"
     fs-extra-p "^4.1.0"
     mime "^1.3.4"
     progress-ex "^2.0.0"

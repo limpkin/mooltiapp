@@ -3,61 +3,52 @@
 
 [![Build status](https://ci.appveyor.com/api/projects/status/nce8eenqf1wq9f92?svg=true)](https://ci.appveyor.com/project/limpkin/mooltiapp)
 
-
 # Mooltiapp
 
-Starting / Building the App - Windows
--------------------------------------
-- install node js at https://nodejs.org/en/download/
-- delete the chrome_app file inside the app folder
-- copy the chrome app folder from the mooltipass root repository to the app folder
-- (from a shell with admin rights) npm install -g windows-build-tools
-- (from a shell with admin rights) npm install -g electron
-- (from a shell with admin rights) npm install -g node-gyp
-- (standard shell, inside the mooltiapp folder) npm install
+Prerequisites
+-------------
 
-To run the app:
+Project uses native modules, and you need to prepare your environment for compiling them.
+Please consult [Platform notes](DEVELOPMENT.md#platform-notes)
 
-- npm start
+First steps
+-----------
+After cloning this repo, you should run:
+    
+    git submodule update --init
+    npm i
+    npm run ciprep
 
-To build the app (NOT WORKING AT THE MOMENT):
+This will:
+- pull submodule, 
+- install npm dependencies, 
+- add symlink to chrome_app and sync version
 
-- inside app/node_modules/websocket/, edited package.json install script to "install": "node-gyp rebuild".
-- npm run build:win
+Running app
+-----------
 
+    npm start
 
-Starting / Building the App - Ubuntu
-------------------------------------
-- sudo ln -s /usr/bin/nodejs /usr/bin/node
-- sudo apt-get install npm nodejs libusb-1.0-0-dev
-- sudo npm install -g electron
-- sudo npm install -g node-gyp
-- (inside the mooltiapp folder) npm install
-- add the udev rule: see https://www.themooltipass.com/udev_rule.txt
+Building installer
+------------------
 
-To run the app:
+    npm run release
 
-- npm start
+Warning!!!
+----------
 
-To build the app (NOT WORKING AT THE MOMENT):
+Remember - it's your duty to keep updated the `mooltipass` submodule, git doesn't do it automatically. 
+Whenever you need fresh `mooltipass`, run: 
 
-- todo
+    git submodule update
+    
+And sync app version with chrome_app:
+    
+    npm run sync
 
+Or use this convenient script to perform all above:
 
+    npm run subsync    
 
-Starting / Building the App - MAC
----------------------------------
-
-- npm install -g electron
-- npm install
-- inside app/node_modules/websocket/, edited package.json install script to "install": "node-gyp rebuild".
-- "npm run build:osx" or "npm start"
-
-Notes
------
-Permission error on MAC:
-
-- rm -Rf ~/.electron/
-- sudo npm install -g electron --unsafe-perm=true --allow-root
-
-I also ran with problems building websocket, my solution was: inside app/node_modules/websocket/, edited package.json install script to "install": "node-gyp rebuild".
+I strongly recommend [yarn](https://yarnpkg.com/) instead of `npm` for faster modules operations, considering size of dependencies used.
+You can safely replace `npm` with `yarn` in all commands in this guide. 

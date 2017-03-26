@@ -84,11 +84,15 @@ app/package.json "dependencies" will get into installer, so please put irrelevan
 
 ## Platform notes
 
+### Mac OS X 
+
+You'll need Xcode
+
 ### Windows XP, 7, 8, 10
 
-You'll need Visual C++ compiler and Python 2.7, easiest way
+You'll need Visual C++ compiler and Python 2.7, easiest way is to get them via:
 
-    npm install --global windows-build-tools
+    npm i -g windows-build-tools
 
 Add %USERPROFILE%\.windows-build-tools\python27 to PATH, like PowerShell: 
     
@@ -102,7 +106,9 @@ For install builder
     
 For native modules
     
-    npm install -g node-gyp node-pre-gyp
+    npm i -g node-gyp node-pre-gyp
+    
+Add the udev rule: see https://www.themooltipass.com/udev_rule.txt
 
 (from manual)
 ```
@@ -139,7 +145,3 @@ with 'hidraw'
      },
 ```
 and do electron-rebuild as usual, then copy new binary to app dir where needed
-
-### Mac OS X 
-
-Xcode
