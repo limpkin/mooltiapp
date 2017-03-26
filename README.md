@@ -25,15 +25,19 @@ Install the required packages:
 Linux udev rules
 ----------------
 Getting sudo access
+
     myuser@myusers-vubuntu:~$ sudo -s
 
 User name is "myuser" on this machine, adding user myuser to group plugdev
+
     root@myusers-vubuntu:~# gpasswd -a myuser plugdev
 
 Adding an udev rule
+
     root@myusers-vubuntu:~# echo "ATTRS{idVendor}==\"16d0\", ATTRS{idProduct}==\"09a0\", SYMLINK+=\"mooltipass\", MODE=\"0664\", GROUP=\"plugdev\"" > /etc/udev/rules.d/50-mooltipass.rules
 
 Reloading the rules
+
     root@myusers-vubuntu:~# udevadm control --reload-rules
 
 Unplug and replug your device. If the Mooltiapp still flickers or doesn't see the Mooltipass device, try logging off and logging back.
