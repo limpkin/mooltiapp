@@ -99,10 +99,6 @@ Add %USERPROFILE%\.windows-build-tools\python27 to PATH, like PowerShell:
     $env:Path += ";$env:USERPROFILE\.windows-build-tools\python27"
 
 ### Linux
-
-Setup correct node name
-    
-    sudo ln -s /usr/bin/nodejs /usr/bin/node
     
 For install builder
     

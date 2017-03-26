@@ -21,6 +21,14 @@ Install the required packages:
 
     sudo apt-get install libusb-1.0-0-dev libusb-1.0-0 libudev-dev git
 	sudo npm i -g node-gyp node-pre-gyp electron
+
+Prerequisites - Windows
+-----------------------
+
+- install node js at https://nodejs.org/en/download/ (take current version)
+- (from a shell with admin rights) npm i -g node-gyp node-pre-gyp electron windows-build-tools
+- (standard shell, inside the mooltiapp folder) npm install
+- when running npm run ciprep below, please do it in an administrative shell
 	
 Linux udev rules
 ----------------
