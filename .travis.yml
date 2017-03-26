@@ -32,6 +32,7 @@ addons:
 
 # Handle git submodules yourself
 git:
+    depth: 1
     submodules: false
 
 before_install:

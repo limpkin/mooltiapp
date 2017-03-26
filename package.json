@@ -61,8 +61,6 @@
     ]
   },
   "devDependencies": {
-    "async": "^2",
-    "dependency-check": "^2",
     "electron": "^1.6.4",
     "electron-builder": "^16.4.0",
     "electron-debug": "^1.1.0",
@@ -70,12 +68,16 @@
     "pre-commit": "^1",
     "rimraf": "^2",
     "shelljs": "^0.7",
-    "standard": "^9.0.2",
     "@types/core-js": "latest",
     "@types/node": "latest",
     "@types/electron": "latest",
     "@types/electron-builder": "latest"
   },
   "dependencies": {
+  },
+  "optionalDependencies": {
+    "standard": "^9.0.2",
+    "async": "^2",
+    "dependency-check": "^2"
   }
 }
