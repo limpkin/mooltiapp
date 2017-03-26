@@ -37,7 +37,7 @@
     ]
   },
   "linux": {
-    "category": "Development",
+    "category": "Utility",
     "maintainer": "mooltipass <info@themooltipass.com>",
     "target": [
       "AppImage",
