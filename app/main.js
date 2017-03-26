@@ -6,18 +6,24 @@ const _ = require('lodash')
 
 const electron = require('electron')
 const {app, Tray, dialog, Menu} = electron
-const ipc = electron.ipcMain
+// const ipc = electron.ipcMain
 
 const windowStateKeeper = require('electron-window-state')
-const {autoUpdater} = require('electron-updater')
+const autoUpdater = require('electron-updater').autoUpdater
 const log = require('electron-log')
+
 autoUpdater.logger = log
 autoUpdater.logger.transports.file.level = 'info'
 // autoUpdater.autoDownload = false
 autoUpdater.autoDownload = true
+
+// eslint-disable-next-line no-unused-vars
 let isReadyToUpdate = false
+
 // Prevent objects being garbage collected
+/** @type {Electron.BrowserWindow} */
 let mainWindow = null
+/** @type {Electron.Tray} */
 let tray = null
 const pjson = require('./package.json')
 
@@ -190,10 +196,7 @@ function initialize () {
     const contextMenu = Menu.buildFromTemplate([
       {
         label: 'Show App',
-        click: function () {
-          mainWindow.show()
-          if (process.platform === 'darwin') app.dock.show()
-        }
+        click: cmdShowApp
       },
       {
         label: 'Quit',
@@ -206,11 +209,19 @@ function initialize () {
 
     tray.setToolTip('Open or Quit MooltiApp')
     tray.setContextMenu(contextMenu)
+    tray.on('double-click', cmdShowApp)
 
     autoUpdater.checkForUpdates()
   })
 
   app.on('will-quit', () => { })
+}
+
+function cmdShowApp () {
+  if (mainWindow) {
+    mainWindow.show()
+    if (process.platform === 'darwin') app.dock.show()
+  }
 }
 
 // Make this app a single instance app.
