@@ -32,7 +32,7 @@ Travis OSX builds can spend hour(s) in queue.
 
 You must provide certain environment variables for github publishing and code signing
 
-	GH_TOKEN = github token, for publishing
+	GH_TOKEN = github token, for publishing (public_repo permission)
 	CSC_LINK = Certificate converted to base64-encoded string, or url to cert (*.p12 or *.pfx file)
 	CSC_KEY_PASSWORD = The password to decrypt the certificate given in CSC_LINK
 
@@ -99,14 +99,14 @@ Add %USERPROFILE%\.windows-build-tools\python27 to PATH, like PowerShell:
     $env:Path += ";$env:USERPROFILE\.windows-build-tools\python27"
 
 ### Linux
-
+    
 For install builder
     
     sudo apt-get install --no-install-recommends -y icnsutils graphicsmagick xz-utils
     
 For native modules
     
-    npm i -g node-gyp node-pre-gyp
+    sudo npm i -g node-gyp node-pre-gyp
     
 Add the udev rule: see https://www.themooltipass.com/udev_rule.txt
 

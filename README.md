@@ -1,9 +1,54 @@
 
-[![Build Status](https://travis-ci.org/mediaslav/mooltiapp.svg?branch=master)](https://travis-ci.org/mediaslav/mooltiapp)
+[![Build Status](https://travis-ci.org/limpkin/mooltiapp.svg?branch=master)](https://travis-ci.org/limpkin/mooltiapp)
 
-[![Build status](https://ci.appveyor.com/api/projects/status/dcgiu6o1nn39hrqo?svg=true)](https://ci.appveyor.com/project/mediaslav/mooltiapp)
+[![Build status](https://ci.appveyor.com/api/projects/status/nce8eenqf1wq9f92?svg=true)](https://ci.appveyor.com/project/limpkin/mooltiapp)
 
 # Mooltiapp
+
+Prerequisites - Linux
+---------------------
+
+Add NodeJs PPA:
+
+    sudo apt-get install python-software-properties curl
+	curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+	
+Install Node.js and NPM:
+
+    sudo apt-get install nodejs
+	
+Install the required packages:
+
+    sudo apt-get install libusb-1.0-0-dev libusb-1.0-0 libudev-dev git
+	sudo npm i -g node-gyp node-pre-gyp electron
+
+Prerequisites - Windows
+-----------------------
+
+- install node js at https://nodejs.org/en/download/ (take current version)
+- (from a shell with admin rights) npm i -g node-gyp node-pre-gyp electron windows-build-tools
+- (standard shell, inside the mooltiapp folder) npm install
+- when running npm run ciprep below, please do it in an administrative shell
+	
+Linux udev rules
+----------------
+Getting sudo access
+
+    myuser@myusers-vubuntu:~$ sudo -s
+
+User name is "myuser" on this machine, adding user myuser to group plugdev
+
+    root@myusers-vubuntu:~# gpasswd -a myuser plugdev
+
+Adding an udev rule
+
+    root@myusers-vubuntu:~# echo "ATTRS{idVendor}==\"16d0\", ATTRS{idProduct}==\"09a0\", SYMLINK+=\"mooltipass\", MODE=\"0664\", GROUP=\"plugdev\"" > /etc/udev/rules.d/50-mooltipass.rules
+
+Reloading the rules
+
+    root@myusers-vubuntu:~# udevadm control --reload-rules
+
+Unplug and replug your device. If the Mooltiapp still flickers or doesn't see the Mooltipass device, try logging off and logging back.
 
 Prerequisites
 -------------
