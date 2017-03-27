@@ -23,6 +23,10 @@ var portSchema = {__proto__: null, name: 'port', $ref: 'runtime.Port'}
 var messageSchema = {__proto__: null, name: 'message', type: 'any', optional: true}
 var options = {__proto__: null, unmanaged: true}
 
+var mooltipass_commands = { // Just used ones (full list at mooltipass/chrome_app/vendor/mooltipass/device.js)
+  'getMooltipassStatus': 0xB9
+}
+
 // Simulate Chrome and set it global in Electron Environment
 var chrome = global.chrome = {
   runtime: {
@@ -194,8 +198,9 @@ chrome.hid = {
   },
   receive (connectionId, callback) {
     if (!connectionId) connectionId = this.connection
+
     connectionId.read(function (err, response) {
-      if ( response[1] === 185 ) {
+      if ( response[1] === mooltipass_commands.getMooltipassStatus ) {
         if ( response[2] == 5 && deviceStatus == 'locked') {
           deviceStatus = 'unlocked'
           REMOTE.getGlobal('changeTray')('icon_normal_19.png')
@@ -204,7 +209,7 @@ chrome.hid = {
           REMOTE.getGlobal('changeTray')('icon_cross_16.png')
         }
       }
-      if ( response[1] != 185 ) console.log('Received', response );
+      //if ( response[1] != mooltipass_commands.getMooltipassStatus ) console.log('Received', response );
       if (response.length > 0) callback(0, response)
     })
   },
