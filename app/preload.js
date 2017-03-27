@@ -2,6 +2,9 @@ const {dialog} = require('electron').remote
 const fs = require('fs')
 var HID = require('node-hid')
 
+// Keep track of the device status
+var deviceStatus = 'locked';
+
 // Extend EVENT object to behave like chrome's
 Event.prototype.listeners = []
 Event.prototype.externalListeners = []
@@ -19,6 +22,10 @@ Event.prototype.addExternalListener = function (callback) {
 var portSchema = {__proto__: null, name: 'port', $ref: 'runtime.Port'}
 var messageSchema = {__proto__: null, name: 'message', type: 'any', optional: true}
 var options = {__proto__: null, unmanaged: true}
+
+var mooltipass_commands = { // Just used ones (full list at mooltipass/chrome_app/vendor/mooltipass/device.js)
+  'getMooltipassStatus': 0xB9
+}
 
 // Simulate Chrome and set it global in Electron Environment
 var chrome = global.chrome = {
@@ -191,8 +198,18 @@ chrome.hid = {
   },
   receive (connectionId, callback) {
     if (!connectionId) connectionId = this.connection
+
     connectionId.read(function (err, response) {
-      // if ( response[1] != 185 ) console.log('Received', response );
+      if ( response[1] === mooltipass_commands.getMooltipassStatus ) {
+        if ( response[2] == 5 && deviceStatus == 'locked') {
+          deviceStatus = 'unlocked'
+          REMOTE.getGlobal('changeTray')('icon_normal_19.png')
+        } else if ( response[2] !== 5 && deviceStatus == 'unlocked') {
+          deviceStatus = 'locked'
+          REMOTE.getGlobal('changeTray')('icon_cross_16.png')
+        }
+      }
+      //if ( response[1] != mooltipass_commands.getMooltipassStatus ) console.log('Received', response );
       if (response.length > 0) callback(0, response)
     })
   },
@@ -329,7 +346,10 @@ wsServer.on('request', function (request) {
 
       // Keeping a close look at every command here
       // When we receive a message, we need to translate it to a format the APP will understand (as the extension is thinking it is connected with moolticute)
-      if (json.msg == 'ask_password') {
+      if (json.msg == 'show_app') {
+        var remoteWindow = REMOTE.getCurrentWindow();
+        remoteWindow.show();
+      } else if (json.msg == 'ask_password') {
         var newMessage = {
           command: 'getCredentials',
           contexts: [json.data.service, json.data.fallback_service],
