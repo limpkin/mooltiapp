@@ -24,7 +24,8 @@ let isReadyToUpdate = false
 /** @type {Electron.BrowserWindow} */
 let mainWindow = null
 /** @type {Electron.Tray} */
-let tray = null
+var tray = null
+
 const pjson = require('./package.json')
 
 // Use system log facility, should work on Windows too
@@ -210,6 +211,15 @@ function initialize () {
     tray.setToolTip('Open or Quit MooltiApp')
     tray.setContextMenu(contextMenu)
     tray.on('double-click', cmdShowApp)
+
+    // We can't call tray from running process, so we use this function to wrap it up
+    function changeTray( icon ) {
+      // icon_normal_19.png ~ icon_cross_16.png 
+      tray.setImage(path.join(__dirname, 'chrome_app', 'images', 'icons', icon));
+    }
+
+    global.changeTray = changeTray
+
 
     autoUpdater.checkForUpdates()
   })
