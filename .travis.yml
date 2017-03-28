@@ -34,7 +34,6 @@ addons:
       - libusb-1.0-0
       - libusb-1.0-0-dev
       - libudev-dev
-      - git-lfs
 
 # Handle git submodules yourself
 git:
