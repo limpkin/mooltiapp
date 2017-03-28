@@ -11,9 +11,11 @@ const appJsonPath = path.join(appDir, 'package.json')
 
 // mooltipass/chrome_app/manifest.json
 const chromeAppManifest = require(path.join(chromeAppDir, 'manifest.json'))
+const builderConfig = require('./electron-builder.json')
+let pjson = require(appJsonPath)
+pjson.version = chromeAppManifest.version
 
-// let ver = '6.4.0' // just to test autoupdate
-// ln -siv ../mooltipass/chrome_app
+// ln -siv ../mainrepo/wrapped_app
 
 let actionList = {
   linkapp: () => {
@@ -22,9 +24,17 @@ let actionList = {
   },
   appdeps: () => child_process.spawnSync('yarn', ['install', '--production'], {cwd: chromeAppDir}),
   syncver: () => {
-    let pj = require(appJsonPath)
-    pj.version = chromeAppManifest.version
-    return fs.writeFileSync(appJsonPath, JSON.stringify(pj, null, 2), 'utf8')
+    return fs.writeFileSync(appJsonPath, JSON.stringify(pjson, null, 2), 'utf8')
+  },
+  desktopitem: () => {
+    `[Desktop Entry]
+Name=${pjson.name}_DEVMODE
+Comment=${pjson.description}
+Exec=/home/osboxes/prj/mooltiapp/node_modules/electron/dist/electron /home/osboxes/prj/mooltiapp/app
+Terminal=false
+Type=Application
+Icon=mooltipass
+Categories=${builderConfig.linux.category};`
   }
 }
 
