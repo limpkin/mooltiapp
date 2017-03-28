@@ -9,11 +9,11 @@ Repo layout:
 	appveyor.yml - CI config
 	app/
 	app/chrome_app links to -> ../../chrome_app/
-	mooltipass/ - git submodule, referencing github.com/limpkin/mooltipass repo
+	mooltipass/ - clone of github.com/limpkin/mooltipass repo OR symlink to local copy 
 
 ## High level workflow
 
-1) You push to repo, (tip: add [ci skip] in commit msg to skip build)
+1) You push to repo, (tip: add [ci skip] in commit msg to skip build, [skip appveyor] and [skip travis] also works)
 
 2) git hook activates CI, and CI performs build 
 

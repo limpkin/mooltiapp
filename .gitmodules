@@ -1,4 +1,0 @@
-[submodule "mooltipass"]
-	path = mooltipass
-	url = https://github.com/limpkin/mooltipass.git
-	shallow = true
