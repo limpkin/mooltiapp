@@ -45,11 +45,7 @@ before_install:
 #  - mkdir -p /tmp/git-lfs && curl -L https://github.com/github/git-lfs/releases/download/v1.5.5/git-lfs-$([ "$TRAVIS_OS_NAME" == "linux" ] && echo "linux" || echo "darwin")-amd64-1.5.5.tar.gz | tar -xz -C /tmp/git-lfs --strip-components 1 && /tmp/git-lfs/git-lfs pull
 #  - curl -o- -L https://yarnpkg.com/install.sh | bash
 #  - export PATH="$HOME/.yarn/bin:$PATH"
-#  - git submodule update --init --recursive --depth=1
-#  - git submodule update --init --depth=1
-  - git submodule update --init --depth=1 --force
-#  - git submodule foreach git pull origin master
-#  - git submodule update --remote --depth=1
+  - git git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass
 
 install:
   - nvm install 7
