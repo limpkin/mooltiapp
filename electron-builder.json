@@ -50,7 +50,8 @@
     ]
   },
   "nsis": {
-    "perMachine": true,
+    "oneClick": true,
+    "runAfterFinish": true,
     "unicode": false
   },
   "publish": [
