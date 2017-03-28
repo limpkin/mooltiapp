@@ -9,7 +9,7 @@ Repo layout:
 	appveyor.yml - CI config
 	app/
 	app/chrome_app links to -> ../../chrome_app/
-	mooltipass/ - git submodule, referencing github.com/limpkin/mooltipass repo
+	mooltipass/ - clone of github.com/limpkin/mooltipass repo OR symlink to local copy 
 
 ## High level workflow
 
