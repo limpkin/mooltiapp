@@ -13,7 +13,7 @@ Repo layout:
 
 ## High level workflow
 
-1) You push to repo, (tip: add [ci skip] in commit msg to skip build)
+1) You push to repo, (tip: add [ci skip] in commit msg to skip build, [skip appveyor] and [skip travis] also works)
 
 2) git hook activates CI, and CI performs build 
 

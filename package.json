@@ -32,7 +32,8 @@
     "postrelease": "node build/target.js --clean",
     "postinstall": "install-app-deps && electron-rebuild --force --module-dir app",
     "erb": "electron-rebuild --force --module-dir app",
-    "subsync": "git submodule update && node ./butil.js syncver",
+    "getmainrepo": "git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass",
+    "subsync": "cd mooltipass && git pull && cd .. && node ./butil.js syncver",
     "sync": "node ./butil.js syncver",
     "ciprep": "node ./butil.js linkapp syncver"
   },

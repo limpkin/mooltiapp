@@ -48,7 +48,6 @@ before_install:
   - git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass
 
 install:
-#  - nvm install 7
   - yarn install
   - yarn run ciprep
 
