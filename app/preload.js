@@ -216,6 +216,12 @@ chrome.hid = {
     if (!connectionId) connectionId = this.connection
 
     connectionId.read(function (err, response) {
+      if ( !response || !response[1] ) {
+        console.log( 'Strange response:', response, err )
+        if (response.length > 0) callback(0, response)
+        return;
+      }
+
       if ( response[1] === mooltipass_commands.getMooltipassStatus ) {
         if ( response[2] == 5 && deviceStatus == 'locked') {
           deviceStatus = 'unlocked'
