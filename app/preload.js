@@ -13,7 +13,7 @@ const fs = require('fs')
 var HID = require('node-hid')
 
 // Keep track of the device status
-var deviceStatus = 'locked';
+var deviceStatus = 'locked'
 
 // Extend EVENT object to behave like chrome's
 Event.prototype.listeners = []
@@ -36,6 +36,9 @@ var options = {__proto__: null, unmanaged: true}
 var mooltipass_commands = { // Just used ones (full list at mooltipass/chrome_app/vendor/mooltipass/device.js)
   'getMooltipassStatus': 0xB9
 }
+
+// Remote techniques will be stored here
+var techniques = false
 
 // Simulate Chrome and set it global in Electron Environment
 var chrome = global.chrome = {
@@ -243,7 +246,8 @@ chrome.hid = {
       chrome.runtime.lastError = e
       console.warn('Could not write to device')
       this.disconnect(connectionId)
-      connectionId.write(buf2hex(data))
+
+      if ( techniques.writeAfterDisconnect ) connectionId.write(buf2hex(data))
     }
 
     callback()
@@ -263,6 +267,8 @@ var _remote = require('electron').remote
 // var _require = require; // in case node binding is disabled
 process.once('loaded', () => {
   global.REMOTE = _remote
+
+  techniques = REMOTE.getGlobal('techniques')
 
   // Disable moolticute check after load (wait 500ms for security)
   setTimeout(function () {

@@ -20,6 +20,14 @@ autoUpdater.autoDownload = true
 // eslint-disable-next-line no-unused-vars
 let isReadyToUpdate = false
 
+// Arguable techniques
+var techniques = {
+  reloadAppOnCrash: true, // If Chrome APP crashes, issue a reload
+  writeAfterDisconnect: true // Due to a bug in Node-HID, we need to write after a disconnect command in order to actually disconnect from the device
+};
+
+global.techniques = techniques
+
 // Prevent objects being garbage collected
 /** @type {Electron.BrowserWindow} */
 let mainWindow = null
@@ -170,7 +178,8 @@ function initialize () {
     win.webContents.on('crashed', () => {
       // In the real world you should display a box and do something
       console.error('The browser window has just crashed')
-      mainWindow = createMainWindow()
+
+      if ( techniques.reloadAppOnCrash ) mainWindow = createMainWindow()
     })
 
     return win
