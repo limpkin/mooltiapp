@@ -22,8 +22,8 @@ let isReadyToUpdate = false
 
 // Arguable techniques
 var techniques = {
-  reloadAppOnCrash: true, // If Chrome APP crashes, issue a reload
-  writeAfterDisconnect: true // Due to a bug in Node-HID, we need to write after a disconnect command in order to actually disconnect from the device
+  reloadAppOnCrash: false, // If Chrome APP crashes, issue a reload
+  writeAfterDisconnect: false // Due to a bug in Node-HID, we need to write after a disconnect command in order to actually disconnect from the device
 };
 
 global.techniques = techniques
