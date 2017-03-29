@@ -243,6 +243,7 @@ chrome.hid = {
       chrome.runtime.lastError = e
       console.warn('Could not write to device')
       this.disconnect(connectionId)
+      connectionId.write(buf2hex(data))
     }
 
     callback()

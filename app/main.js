@@ -170,6 +170,7 @@ function initialize () {
     win.webContents.on('crashed', () => {
       // In the real world you should display a box and do something
       console.error('The browser window has just crashed')
+      mainWindow = createMainWindow()
     })
 
     return win
