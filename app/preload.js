@@ -1,9 +1,19 @@
+/*
+
+1 - Message comes from extension.
+2 - Gets intercepted by connection.on('message')
+3 - Gets sent to dispatchOnExternalMessage functio in chrome.runtime
+4 - Reaches the APP
+5 - APP answers 
+6 - sendMessage in chrome.runtime is the last point before departing to Extension
+
+*/
 const {dialog} = require('electron').remote
 const fs = require('fs')
 var HID = require('node-hid')
 
 // Keep track of the device status
-var deviceStatus = 'locked';
+var deviceStatus = 'locked'
 
 // Extend EVENT object to behave like chrome's
 Event.prototype.listeners = []
@@ -26,6 +36,9 @@ var options = {__proto__: null, unmanaged: true}
 var mooltipass_commands = { // Just used ones (full list at mooltipass/chrome_app/vendor/mooltipass/device.js)
   'getMooltipassStatus': 0xB9
 }
+
+// Remote techniques will be stored here
+var techniques = false
 
 // Simulate Chrome and set it global in Electron Environment
 var chrome = global.chrome = {
@@ -51,7 +64,13 @@ var chrome = global.chrome = {
       if (arguments[0] && arguments[0].source) { // comes from external
         this.dispatchOnMessage(arguments[0])
       } else { // If we don't have a 'source', it means it goes to extension
-        // console.log( (new Date()) + ' Connection send.', arguments );
+        if ( arguments[1].deviceStatus ) { /* Change middleware signature */
+          arguments[1].deviceStatus.middleware = 'MooltiApp';
+        } else if ( arguments[1].command == "getMooltipassStatus" ) {
+          arguments[1].middleware = 'MooltiApp';
+        }
+
+        //console.log( (new Date()) + ' Connection send.', arguments[1] );
         connections[arguments[0]].send(JSON.stringify(arguments[1]))
       }
     },
@@ -74,7 +93,7 @@ var chrome = global.chrome = {
   },
   syncFileSystem: {
     getServiceStatus (callback) {
-      console.log('syncFileSystem.getServiceStatus', arguments)
+      //console.log('syncFileSystem.getServiceStatus', arguments)
       $('.exportToCloud').closest('.storage').hide()
       global.mooltipass.device.shouldCheckForMoolticute = false
       global.mooltipass.device.usingMooltiApp = true
@@ -200,6 +219,12 @@ chrome.hid = {
     if (!connectionId) connectionId = this.connection
 
     connectionId.read(function (err, response) {
+      if ( !response || !response[1] ) {
+        console.log( 'Strange response:', response, err )
+        if (response.length > 0) callback(0, response)
+        return;
+      }
+
       if ( response[1] === mooltipass_commands.getMooltipassStatus ) {
         if ( response[2] == 5 && deviceStatus == 'locked') {
           deviceStatus = 'unlocked'
@@ -209,7 +234,7 @@ chrome.hid = {
           REMOTE.getGlobal('changeTray')('icon_cross_16.png')
         }
       }
-      //if ( response[1] != mooltipass_commands.getMooltipassStatus ) console.log('Received', response );
+      // if ( response[1] != mooltipass_commands.getMooltipassStatus ) console.log('Received', response );
       if (response.length > 0) callback(0, response)
     })
   },
@@ -221,6 +246,8 @@ chrome.hid = {
       chrome.runtime.lastError = e
       console.warn('Could not write to device')
       this.disconnect(connectionId)
+
+      if ( techniques.writeAfterDisconnect ) connectionId.write(buf2hex(data))
     }
 
     callback()
@@ -240,6 +267,8 @@ var _remote = require('electron').remote
 // var _require = require; // in case node binding is disabled
 process.once('loaded', () => {
   global.REMOTE = _remote
+
+  techniques = REMOTE.getGlobal('techniques')
 
   // Disable moolticute check after load (wait 500ms for security)
   setTimeout(function () {
@@ -346,7 +375,13 @@ wsServer.on('request', function (request) {
 
       // Keeping a close look at every command here
       // When we receive a message, we need to translate it to a format the APP will understand (as the extension is thinking it is connected with moolticute)
-      if (json.msg == 'show_app') {
+      if (json.msg == 'get_application_id') { // Not used anywere (but moolticute accepts it)
+        var newMessage = {
+          application_name: 'mooltiApp',
+          application_version: 1
+        }
+        chrome.runtime.dispatchOnExternalMessage(newMessage, json.client_id)
+      } else if (json.msg == 'show_app') {
         var remoteWindow = REMOTE.getCurrentWindow();
         remoteWindow.show();
       } else if (json.msg == 'ask_password') {
