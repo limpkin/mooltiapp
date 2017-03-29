@@ -25,7 +25,7 @@
     "build:osx": "npm run prebuild && build --mac && npm run postbuild",
     "build:win": "npm run prebuild && build --win --x64 && npm run postbuild",
     "build:linux": "npm run prebuild && build --linux deb AppImage --x64 && npm run postbuild",
-    "build": "build",
+    "build": "build --publish never",
     "postbuild": "node build/target.js --clean",
     "prerelease": "node build/target.js",
     "release": "build",
