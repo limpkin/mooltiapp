@@ -242,7 +242,7 @@ chrome.hid = {
       }
       else
       {
-          chrome.runtime.lastError = e
+          chrome.runtime.lastError = err
           console.warn('Could not read from device')
           callback(0, undefined)
       }
