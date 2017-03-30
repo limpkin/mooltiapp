@@ -219,23 +219,33 @@ chrome.hid = {
     if (!connectionId) connectionId = this.connection
 
     connectionId.read(function (err, response) {
-      if ( !response || !response[1] ) {
-        console.log( 'Strange response:', response, err )
-        //if (response.length > 0) callback(0, response)
-        return;
-      }
+      // If there's an error, call the callback and set an undefined response
+      if (typeof err === 'undefined') 
+      {
+          if ( !response || !response[1] ) {
+            console.log( 'Strange response:', response, err )
+            if (response.length > 0) callback(0, response)
+            return;
+          }
 
-      if ( response[1] === mooltipass_commands.getMooltipassStatus ) {
-        if ( response[2] == 5 && deviceStatus == 'locked') {
-          deviceStatus = 'unlocked'
-          REMOTE.getGlobal('changeTray')('icon_normal_19.png')
-        } else if ( response[2] !== 5 && deviceStatus == 'unlocked') {
-          deviceStatus = 'locked'
-          REMOTE.getGlobal('changeTray')('icon_cross_16.png')
-        }
+          if ( response[1] === mooltipass_commands.getMooltipassStatus ) {
+            if ( response[2] == 5 && deviceStatus == 'locked') {
+              deviceStatus = 'unlocked'
+              REMOTE.getGlobal('changeTray')('icon_normal_19.png')
+            } else if ( response[2] !== 5 && deviceStatus == 'unlocked') {
+              deviceStatus = 'locked'
+              REMOTE.getGlobal('changeTray')('icon_cross_16.png')
+            }
+          }
+          // if ( response[1] != mooltipass_commands.getMooltipassStatus ) console.log('Received', response );
+          if (response.length > 0) callback(0, response)
       }
-      // if ( response[1] != mooltipass_commands.getMooltipassStatus ) console.log('Received', response );
-      if (response.length > 0) callback(0, response)
+      else
+      {
+          chrome.runtime.lastError = e
+          console.warn('Could not read from device')
+          callback(0, undefined)
+      }
     })
   },
   send (connectionId, reportId, data, callback) {
