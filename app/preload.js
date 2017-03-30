@@ -221,7 +221,7 @@ chrome.hid = {
     connectionId.read(function (err, response) {
       if ( !response || !response[1] ) {
         console.log( 'Strange response:', response, err )
-        if (response.length > 0) callback(0, response)
+        //if (response.length > 0) callback(0, response)
         return;
       }
 
