@@ -144,4 +144,4 @@ with 'hidraw'
          'driver%': 'hidraw'
      },
 ```
-and do electron-rebuild as usual, then copy new binary to app dir where needed
+and do electron-rebuild (npm run erb), then copy new binary to app dir where needed
