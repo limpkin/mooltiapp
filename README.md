@@ -11,25 +11,25 @@ Prerequisites - Linux
 Add NodeJs PPA:
 
     sudo apt-get install python-software-properties curl
-	curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
-	
+    curl -sL https://deb.nodesource.com/setup_7.x | sudo -E bash -
+
 Install Node.js and NPM:
 
     sudo apt-get install nodejs
-	
+
 Install the required packages:
 
     sudo apt-get install libusb-1.0-0-dev libusb-1.0-0 libudev-dev git
-	sudo npm i -g node-gyp node-pre-gyp electron
+    sudo npm i -g node-gyp node-pre-gyp electron
 
 Prerequisites - Windows
 -----------------------
 
-- install node js at https://nodejs.org/en/download/ (take current version)
-- (from a shell with admin rights) npm i -g node-gyp node-pre-gyp electron windows-build-tools
-- (standard shell, inside the mooltiapp folder) npm install
-- when running npm run ciprep below, please do it in an administrative shell
-	
+- install node js at `https://nodejs.org/en/download/` (take current version)
+- (from a shell with admin rights) `npm i -g node-gyp node-pre-gyp electron windows-build-tools`
+- (standard shell, inside the mooltiapp folder) `npm install`
+- when running `npm run ciprep` below, please do it in an administrative shell
+
 Linux udev rules
 ----------------
 Getting sudo access
@@ -61,7 +61,7 @@ First steps
 After cloning this repo, you should:
 
 - `./mooltipass` must contain copy of `limpkin/mooltipass` repo, you can make symlink to your local copy
-OR create shallow clone of `https://github.com/limpkin/mooltipass.git` into ./mooltipass, use: `npm run getmainrepo`
+OR create shallow clone of `https://github.com/limpkin/mooltipass.git` into `./mooltipass`, use: `npm run getmainrepo`
 - install npm dependencies: `npm i`
 - add symlink to chrome_app and sync version: `npm run ciprep`
 
@@ -70,10 +70,15 @@ Running app
 
     npm start
 
+Linux can expose weird behaviour, no showing tray icon etc. You may need to kill hanging electron processes in order to run the app in development mode.
+It may be helpful to run app from desktop shortcut, more chances that tray icon will work in dev mode.
+
 Building installer
 ------------------
 
-    npm run release
+    npm run build 
+
+Alternatively you can run `npm run release` -- this will build and **publish** installers to github (as configured in electron-builder.json)
 
 Warning!!!
 ----------

@@ -25,7 +25,7 @@
     "build:osx": "npm run prebuild && build --mac && npm run postbuild",
     "build:win": "npm run prebuild && build --win --x64 && npm run postbuild",
     "build:linux": "npm run prebuild && build --linux deb AppImage --x64 && npm run postbuild",
-    "build": "build",
+    "build": "build --publish never",
     "postbuild": "node build/target.js --clean",
     "prerelease": "node build/target.js",
     "release": "build",
@@ -63,22 +63,22 @@
   },
   "devDependencies": {
     "electron": "^1.6.4",
-    "electron-builder": "^16.4.0",
+    "electron-builder": "^16.6.0",
     "electron-debug": "^1.1.0",
     "electron-rebuild": "^1.5.7",
     "pre-commit": "^1",
     "rimraf": "^2",
-    "shelljs": "^0.7",
-    "@types/core-js": "latest",
-    "@types/node": "latest",
-    "@types/electron": "latest",
-    "@types/electron-builder": "latest"
+    "shelljs": "^0.7"
   },
-  "dependencies": {
-  },
+  "dependencies": {},
   "optionalDependencies": {
-    "standard": "^9.0.2",
+    "@types/core-js": "latest",
+    "@types/electron": "latest",
+    "@types/electron-builder": "latest",
+    "@types/lodash": "latest",
+    "@types/node": "latest",
     "async": "^2",
-    "dependency-check": "^2"
+    "dependency-check": "^2",
+    "standard": "^9.0.2"
   }
 }

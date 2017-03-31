@@ -5,7 +5,7 @@ const url = require('url')
 const _ = require('lodash')
 
 const electron = require('electron')
-const {app, Tray, dialog, Menu} = electron
+const {app, Tray, dialog, Menu, systemPreferences} = electron
 // const ipc = electron.ipcMain
 
 const windowStateKeeper = require('electron-window-state')
@@ -24,15 +24,24 @@ let isReadyToUpdate = false
 var techniques = {
   reloadAppOnCrash: false, // If Chrome APP crashes, issue a reload
   writeAfterDisconnect: false // Due to a bug in Node-HID, we need to write after a disconnect command in order to actually disconnect from the device
-};
+}
 
 global.techniques = techniques
 
 // Prevent objects being garbage collected
 /** @type {Electron.BrowserWindow} */
 let mainWindow = null
-/** @type {Electron.Tray} */
-var tray = null
+let tray = null
+
+let shouldQuit = makeSingleInstance()
+if (shouldQuit) {
+  app.quit()
+}
+
+let isAutoStartEnabled = false
+let LoginItem = app.getLoginItemSettings()
+console.log('LoginItem', LoginItem)
+isAutoStartEnabled = LoginItem.openAtLogin
 
 const pjson = require('./package.json')
 
@@ -45,11 +54,6 @@ process.on('uncaughtException', (e) => {
   dialog.showErrorBox('Caught unhandled exception', e.message || 'Unknown error message')
   app.quit()
 })
-
-let shouldQuit = makeSingleInstance()
-if (shouldQuit) {
-  app.quit()
-}
 
 // Load build target configuration file
 try {
@@ -68,7 +72,7 @@ if (isDev) {
   console.info('Running in production')
 }
 
-console.debug(JSON.stringify(pjson.config))
+console.log(JSON.stringify(pjson.config))
 
 // Adds debug features like hotkeys for triggering dev tools and reload
 // (disabled in production, unless the menu item is displayed)
@@ -106,6 +110,7 @@ function initialize () {
       'title': app.getName(),
       'icon': path.join(__dirname, 'chrome_app', 'images', 'icons', 'AppIcon_128.png'),
       'show': false, // Hide your application until your page has loaded
+      // 'showDevTools': true,
       'webPreferences': {
         'nodeIntegration': pjson.config.nodeIntegration || true, // Disabling node integration allows to use libraries such as jQuery/React, etc
         'preload': path.join(__dirname, 'preload.js')
@@ -179,7 +184,7 @@ function initialize () {
       // In the real world you should display a box and do something
       console.error('The browser window has just crashed')
 
-      if ( techniques.reloadAppOnCrash ) mainWindow = createMainWindow()
+      if (techniques.reloadAppOnCrash) mainWindow = createMainWindow()
     })
 
     return win
@@ -204,10 +209,16 @@ function initialize () {
 
     tray = new Tray(path.join(__dirname, 'chrome_app', 'images', 'icons', 'icon_cross_16.png'))
 
-    const contextMenu = Menu.buildFromTemplate([
+    const trayContextMenu = Menu.buildFromTemplate([
       {
         label: 'Show App',
         click: cmdShowApp
+      },
+      {
+        label: 'Auto-start',
+        type: 'checkbox',
+        click: cmdToggleAutostart,
+        checked: isAutoStartEnabled
       },
       {
         label: 'Quit',
@@ -219,22 +230,52 @@ function initialize () {
     ])
 
     tray.setToolTip('Open or Quit MooltiApp')
-    tray.setContextMenu(contextMenu)
+    tray.setContextMenu(trayContextMenu)
     tray.on('double-click', cmdShowApp)
-
-    // We can't call tray from running process, so we use this function to wrap it up
-    function changeTray( icon ) {
-      // icon_normal_19.png ~ icon_cross_16.png 
-      tray.setImage(path.join(__dirname, 'chrome_app', 'images', 'icons', icon));
-    }
 
     global.changeTray = changeTray
 
+    autoUpdater.checkForUpdates().then(r => {
+      console.info('AppUpdater found update:', r.versionInfo)
+    }).catch(e => {
+      console.error('AppUpdater error:', e.code)
+    })
 
-    autoUpdater.checkForUpdates()
   })
 
   app.on('will-quit', () => { })
+}
+
+// We can't call tray from running process, so we use this function to wrap it up
+function changeTray (icon) {
+  // icon_normal_19.png ~ icon_cross_16.png
+  let iconPath = path.join(__dirname, 'chrome_app', 'images', 'icons', icon)
+  if (icon === 'icon_normal_19.png') iconPath = getThemedTrayIcon()
+  console.log('changeTray', icon, iconPath)
+  if (tray)
+    tray.setImage(iconPath)
+}
+
+function getThemedTrayIcon () {
+  let style = 'tray.png'
+  // https://electron.atom.io/docs/api/system-preferences/#systempreferencesisdarkmode-macos
+  if (systemPreferences.isDarkMode()) style = 'tray@dark.png'
+  return path.join(__dirname, 'img', style)
+}
+
+/**
+ * @param menuItem Electron.MenuItemOptions
+ * @param browserWindow Electron.BrowserWindow
+ * @param event Event
+ */
+function cmdToggleAutostart (menuItem, browserWindow, event) {
+  isAutoStartEnabled = !isAutoStartEnabled
+  let LoginItemSettings = {
+    openAtLogin: isAutoStartEnabled,
+    openAsHidden: true,
+  }
+  app.setLoginItemSettings(LoginItemSettings)
+  menuItem.checked = isAutoStartEnabled
 }
 
 function cmdShowApp () {
@@ -244,15 +285,10 @@ function cmdShowApp () {
   }
 }
 
-// Make this app a single instance app.
-//
-// The main window will be restored and focused instead of a second window
-// opened when a person attempts to launch a second instance.
-//
-// Returns true if the current version of the app should quit instead of
-// launching.
+// https://electron.atom.io/docs/api/app/#appmakesingleinstancecallback
+// The callback is guaranteed to be executed after the "ready" event of app gets emitted
 function makeSingleInstance () {
-  return app.makeSingleInstance(() => {
+  return app.makeSingleInstance((commandLine, workingDirectory) => {
     if (mainWindow) {
       if (mainWindow.isMinimized()) mainWindow.restore()
       mainWindow.focus()
