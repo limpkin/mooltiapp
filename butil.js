@@ -27,14 +27,17 @@ let actionList = {
     return fs.writeFileSync(appJsonPath, JSON.stringify(pjson, null, 2), 'utf8')
   },
   desktopitem: () => {
-    `[Desktop Entry]
+    const electronBinPath = require('electron')
+    let desktopItem = `[Desktop Entry]
 Name=${pjson.name}_DEVMODE
 Comment=${pjson.description}
-Exec=/home/osboxes/prj/mooltiapp/node_modules/electron/dist/electron /home/osboxes/prj/mooltiapp/app
+Exec=${electronBinPath} ${appDir}
 Terminal=false
 Type=Application
-Icon=mooltipass
+Icon=${path.join(__dirname, 'build', 'icon.png')}
 Categories=${builderConfig.linux.category};`
+    let target = path.join(path.resolve('~/Desktop'), 'mooltiappdev.desktop')
+    fs.writeFileSync(target, desktopItem, {encoding: 'utf8', mode: 0o777})
   }
 }
 
