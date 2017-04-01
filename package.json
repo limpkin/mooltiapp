@@ -35,7 +35,8 @@
     "getmainrepo": "git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass",
     "subsync": "cd mooltipass && git pull && cd .. && node ./butil.js syncver",
     "sync": "node ./butil.js syncver",
-    "ciprep": "node ./butil.js linkapp syncver"
+    "ciprep": "node ./butil.js linkapp syncver",
+    "desktopitem": "node ./butil.js desktopitem"
   },
   "standard": {
     "globals": [

@@ -13,7 +13,7 @@ const autoUpdater = require('electron-updater').autoUpdater
 const log = require('electron-log')
 
 autoUpdater.logger = log
-autoUpdater.logger.transports.file.level = 'info'
+autoUpdater.logger.transports.file.level = 'error'
 // autoUpdater.autoDownload = false
 autoUpdater.autoDownload = true
 
@@ -46,7 +46,7 @@ isAutoStartEnabled = LoginItem.openAtLogin
 const pjson = require('./package.json')
 
 // Use system log facility, should work on Windows too
-require('./lib/log')(pjson.productName || 'SkelEktron')
+// require('./lib/log')(pjson.productName || 'SkelEktron')
 
 // Manage unhandled exceptions as early as possible
 process.on('uncaughtException', (e) => {
@@ -235,11 +235,7 @@ function initialize () {
 
     global.changeTray = changeTray
 
-    autoUpdater.checkForUpdates().then(r => {
-      console.info('AppUpdater found update:', r.versionInfo)
-    }).catch(e => {
-      console.error('AppUpdater error:', e.code)
-    })
+    if (autoUpdater) autoUpdater.checkForUpdates()
 
   })
 
