@@ -71,7 +71,12 @@ Running app
     npm start
 
 Linux can expose weird behaviour, no showing tray icon etc. You may need to kill hanging electron processes in order to run the app in development mode.
-It may be helpful to run app from desktop shortcut, more chances that tray icon will work in dev mode.
+It may be helpful to run app from desktop shortcut, more chances that tray icon will work in dev mode. 
+Create it with `npm run desktopitem`. Your linux distro may have issues with displaying tray icon (like recent Ubuntu), 
+make sure you checked for such issues in bugtracker and applied appropriate fixes.
+
+Sometimes electron process may still run in background and it will prevent you from running app again.
+You may need to terminate them, using something like `pkill -9 electron`
 
 Building installer
 ------------------

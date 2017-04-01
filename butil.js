@@ -28,6 +28,7 @@ let actionList = {
   },
   desktopitem: () => {
     const electronBinPath = require('electron')
+
     let desktopItem = `[Desktop Entry]
 Name=${pjson.name}_DEVMODE
 Comment=${pjson.description}
@@ -36,7 +37,11 @@ Terminal=false
 Type=Application
 Icon=${path.join(__dirname, 'build', 'icon.png')}
 Categories=${builderConfig.linux.category};`
-    let target = path.join(path.resolve('~/Desktop'), 'mooltiappdev.desktop')
+
+    let target = path.join(process.env.HOME, 'Desktop', 'mooltiappdev.desktop')
+
+    console.log('Creating Desktop Entry at', target, '\nfile:\n', desktopItem, '\n')
+
     fs.writeFileSync(target, desktopItem, {encoding: 'utf8', mode: 0o777})
   }
 }
