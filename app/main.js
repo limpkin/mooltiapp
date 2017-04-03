@@ -207,7 +207,7 @@ function initialize () {
   app.on('ready', () => {
     mainWindow = createMainWindow()
 
-    tray = new Tray(path.join(__dirname, 'chrome_app', 'images', 'icons', 'icon_cross_16.png'))
+    tray = new Tray(getTrayIcon('disc.png'))
 
     const trayContextMenu = Menu.buildFromTemplate([
       {
@@ -242,12 +242,24 @@ function initialize () {
   app.on('will-quit', () => { })
 }
 
+function getTrayIcon (icon) {
+  // path.join(__dirname, 'chrome_app', 'images', 'icons', 'icon_cross_16.png')
+  console.log('getTrayIcon', icon)
+  const iconmap = {
+    'icon_cross_16.png': 'disc.png',
+    'icon_normal_19.png': 'conn.png'
+  }
+  if (iconmap[icon]) return path.join(__dirname, 'img', iconmap[icon])
+  return path.join(__dirname, 'img', icon)
+}
+
 // We can't call tray from running process, so we use this function to wrap it up
 function changeTray (icon) {
   // icon_normal_19.png ~ icon_cross_16.png
-  let iconPath = path.join(__dirname, 'chrome_app', 'images', 'icons', icon)
-  if (icon === 'icon_normal_19.png') iconPath = getThemedTrayIcon()
-  console.log('changeTray', icon, iconPath)
+  let iconPath = getTrayIcon(icon)
+  // let iconPath = path.join(__dirname, 'chrome_app', 'images', 'icons', icon)
+  // if (icon === 'icon_normal_19.png') iconPath = getThemedTrayIcon()
+  // console.log('changeTray', icon, iconPath)
   if (tray)
     tray.setImage(iconPath)
 }
