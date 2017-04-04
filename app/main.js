@@ -44,6 +44,7 @@ console.log('LoginItem', LoginItem)
 isAutoStartEnabled = LoginItem.openAtLogin
 
 const pjson = require('./package.json')
+const appName = pjson.productName || pjson.name
 
 // Use system log facility, should work on Windows too
 // require('./lib/log')(pjson.productName || 'SkelEktron')
@@ -83,7 +84,7 @@ if (isElectronDebugEnabled) {
   })
 }
 
-app.setName(pjson.productName || 'Mooltipass')
+app.setName(appName)
 
 initialize()
 
@@ -107,7 +108,7 @@ function initialize () {
       'height': mainWindowState.height,
       'x': mainWindowState.x,
       'y': mainWindowState.y,
-      'title': app.getName(),
+      'title': appName,
       'icon': path.join(__dirname, 'chrome_app', 'images', 'icons', 'AppIcon_128.png'),
       'show': false, // Hide your application until your page has loaded
       // 'showDevTools': true,
@@ -142,6 +143,9 @@ function initialize () {
       }
       return false
     })
+
+    // prevent changing title
+    win.on('page-title-updated', event => event.preventDefault())
 
     win.loadURL(url.format({
       pathname: path.join(__dirname, pjson.config.url),
@@ -229,7 +233,7 @@ function initialize () {
       }
     ])
 
-    tray.setToolTip('Open or Quit MooltiApp')
+    tray.setToolTip(`Open or Quit ${appName}`)
     tray.setContextMenu(trayContextMenu)
     tray.on('double-click', cmdShowApp)
 

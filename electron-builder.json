@@ -1,6 +1,6 @@
 {
   "appId": "com.limpkin.mooltiapp",
-  "productName": "Mooltipass",
+  "productName": "MooltiApp",
   "artifactName": "${productName}-${arch}-${version}.${ext}",
   "asar": true,
   "files": [
