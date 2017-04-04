@@ -64,13 +64,13 @@
     ]
   },
   "devDependencies": {
-    "electron": "^1.6.4",
-    "electron-builder": "^16.6.0",
+    "electron": "^1.6.5",
+    "electron-builder": "^16.6.2",
     "electron-debug": "^1.1.0",
     "electron-rebuild": "^1.5.7",
     "pre-commit": "^1",
-    "rimraf": "^2",
-    "shelljs": "^0.7"
+    "rimraf": "^2.6.1",
+    "shelljs": "^0.7.7"
   },
   "dependencies": {},
   "optionalDependencies": {
