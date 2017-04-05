@@ -28,6 +28,8 @@ var techniques = {
 
 global.techniques = techniques
 
+let isHidden = false
+
 // Prevent objects being garbage collected
 /** @type {Electron.BrowserWindow} */
 let mainWindow = null
@@ -155,10 +157,13 @@ function initialize () {
 
     win.on('closed', onClosed)
 
+    win.on('show', e => isHidden = false)
+    win.on('hide', e => isHidden = true)
+
     // Then, when everything is loaded, show the window and focus it so it pops up for the user
     // Yon can also use: win.webContents.on('did-finish-load')
     win.on('ready-to-show', () => {
-      win.show()
+      if (!isHidden) win.show()
       win.focus()
     })
 
