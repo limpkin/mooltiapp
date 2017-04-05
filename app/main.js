@@ -28,7 +28,7 @@ var techniques = {
 
 global.techniques = techniques
 
-let isHidden = true
+let isHidden = false
 
 // Prevent objects being garbage collected
 /** @type {Electron.BrowserWindow} */
