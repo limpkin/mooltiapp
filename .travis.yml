@@ -4,7 +4,6 @@ dist: trusty
 sudo: false
 
 language:
-  - c
   - node_js
 
 node_js:
@@ -37,6 +36,8 @@ addons:
       # for building 32 bit
       - gcc-multilib
       - g++-multilib
+      - libusb-1.0-0:i386
+      - libusb-1.0-0-dev:i386
 
 # Handle git submodules yourself
 git:

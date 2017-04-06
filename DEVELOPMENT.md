@@ -127,7 +127,8 @@ but generally you may need just:
     
 To build app in 32 bit from a machine with 64 bit:
 
-    sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib    
+    sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib
+    sudo apt install libusb-1.0-0:i386 libusb-1.0-0-dev:i386
 
 #### node-hid
 
