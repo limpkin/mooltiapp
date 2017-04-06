@@ -60,7 +60,7 @@ install:
 
 script:
   - yarn release
-  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; yarn linux32 ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then yarn linux32 ; fi
 
 branches:
   except:
