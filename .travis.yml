@@ -34,6 +34,9 @@ addons:
       - libusb-1.0-0
       - libusb-1.0-0-dev
       - libudev-dev
+      # for building 32 bit
+      - gcc-multilib
+      - g++-multilib
 
 # Handle git submodules yourself
 git:
@@ -49,10 +52,11 @@ before_install:
 
 install:
   - yarn install
-  - yarn run ciprep
+  - yarn ciprep
 
 script:
-  - yarn run release
+  - yarn release
+  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then yarn linux32 ; fi
 
 branches:
   except:
