@@ -34,11 +34,10 @@ addons:
       - libusb-1.0-0
       - libusb-1.0-0-dev
       - libudev-dev
-      # for building 32 bit
       - gcc-multilib
       - g++-multilib
-      - libusb-1.0-0:i386
-      - libusb-1.0-0-dev:i386
+#      - libusb-1.0-0:i386
+#      - libusb-1.0-0-dev:i386
 
 # Handle git submodules yourself
 git:
@@ -58,7 +57,7 @@ install:
 
 script:
   - yarn release
-  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then yarn linux32 ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then sudo dpkg --add-architecture i386 ; sudo apt-get update -qq ; sudo apt install -y libusb-1.0-0:i386 libusb-1.0-0-dev:i386 ; yarn linux32 ; fi
 
 branches:
   except:
