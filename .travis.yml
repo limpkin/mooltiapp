@@ -1,7 +1,7 @@
 osx_image: xcode7.3
 
 dist: trusty
-sudo: false
+sudo: required
 
 language:
   - c
@@ -50,6 +50,8 @@ before_install:
   - curl -o- -L https://yarnpkg.com/install.sh | bash
   - export PATH="$HOME/.yarn/bin:$PATH"
   - git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass
+  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then sudo dpkg --add-architecture i386 ; sudo apt-get update -qq ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then sudo apt install -y libusb-1.0-0:i386 libusb-1.0-0-dev:i386 ; fi
 
 install:
   - yarn install
@@ -57,7 +59,7 @@ install:
 
 script:
   - yarn release
-  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; then sudo dpkg --add-architecture i386 ; sudo apt-get update -qq ; sudo apt install -y libusb-1.0-0:i386 libusb-1.0-0-dev:i386 ; yarn linux32 ; fi
+  - if [ "$TRAVIS_OS_NAME" = "linux" ] ; yarn linux32 ; fi
 
 branches:
   except:
