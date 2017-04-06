@@ -157,8 +157,8 @@ function initialize () {
 
     win.on('closed', onClosed)
 
-    win.on('show', e => isHidden = false)
-    win.on('hide', e => isHidden = true)
+    win.on('show', e => { isHidden = false })
+    win.on('hide', e => { isHidden = true })
 
     // Then, when everything is loaded, show the window and focus it so it pops up for the user
     // Yon can also use: win.webContents.on('did-finish-load')
@@ -192,7 +192,8 @@ function initialize () {
     win.webContents.on('crashed', () => {
       // In the real world you should display a box and do something
       console.error('The browser window has just crashed')
-
+      win.destroy()
+      mainWindow = null
       if (techniques.reloadAppOnCrash) mainWindow = createMainWindow()
     })
 
@@ -245,7 +246,6 @@ function initialize () {
     global.changeTray = changeTray
 
     if (autoUpdater) autoUpdater.checkForUpdates()
-
   })
 
   app.on('will-quit', () => { })
@@ -269,8 +269,7 @@ function changeTray (icon) {
   // let iconPath = path.join(__dirname, 'chrome_app', 'images', 'icons', icon)
   // if (icon === 'icon_normal_19.png') iconPath = getThemedTrayIcon()
   // console.log('changeTray', icon, iconPath)
-  if (tray)
-    tray.setImage(iconPath)
+  if (tray) { tray.setImage(iconPath) }
 }
 
 function getThemedTrayIcon () {
@@ -289,7 +288,7 @@ function cmdToggleAutostart (menuItem, browserWindow, event) {
   isAutoStartEnabled = !isAutoStartEnabled
   let LoginItemSettings = {
     openAtLogin: isAutoStartEnabled,
-    openAsHidden: true,
+    openAsHidden: true
   }
   app.setLoginItemSettings(LoginItemSettings)
   menuItem.checked = isAutoStartEnabled

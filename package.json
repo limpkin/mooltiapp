@@ -19,7 +19,7 @@
     "clean": "npm run clean:linux && npm run clean:win && npm run clean:osx",
     "pack:osx": "build --dir --mac",
     "pack:win": "build --dir --win32 --x64",
-    "pack:linux": "build --dir --linux --x64",
+    "pack:linux": "build --dir --linux --x64 --ia32",
     "pack": "build --dir",
     "prebuild": "node build/target.js",
     "build:osx": "npm run prebuild && build --mac && npm run postbuild",
@@ -32,12 +32,12 @@
     "postrelease": "node build/target.js --clean",
     "postinstall": "install-app-deps && electron-rebuild --force --module-dir app",
     "erb": "electron-rebuild --force --module-dir app",
-    "forcepull" : "git fetch origin master && git reset --hard FETCH_HEAD",
-    "getmainrepo": "git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass",
     "subsync": "cd mooltipass && git pull && cd .. && node ./butil.js syncver",
     "sync": "node ./butil.js syncver",
     "ciprep": "node ./butil.js linkapp syncver",
-    "desktopitem": "node ./butil.js desktopitem"
+    "desktopitem": "node ./butil.js desktopitem",
+    "getmainrepo": "git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass",
+    "forcepull" : "git fetch origin master && git reset --hard FETCH_HEAD"
   },
   "standard": {
     "globals": [

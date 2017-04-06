@@ -124,6 +124,10 @@ but generally you may need just:
 
     sudo apt install libusb-1.0-0 libusb-1.0-0-dev
     sudo apt-get install libudev-dev
+    
+To build app in 32 bit from a machine with 64 bit:
+
+    sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib    
 
 #### node-hid
 
