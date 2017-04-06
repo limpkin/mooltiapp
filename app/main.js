@@ -202,7 +202,7 @@ function initialize () {
 
   app.on('window-all-closed', () => {
     if (process.platform !== 'darwin') {
-      app.quit()
+      if (!techniques.reloadAppOnCrash) app.quit()
     }
   })
 
