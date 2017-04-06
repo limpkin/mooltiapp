@@ -4,6 +4,7 @@ dist: trusty
 sudo: false
 
 language:
+  - c
   - node_js
 
 node_js:
