@@ -127,14 +127,15 @@ but generally you may need just:
     
 To build app in 32 bit from a machine with 64 bit:
 
-    sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib    
+    sudo apt-get install --no-install-recommends -y gcc-multilib g++-multilib
+    sudo apt install libusb-1.0-0:i386 libusb-1.0-0-dev:i386
 
 #### node-hid
 
 to get all device info you may want to compile it with hidraw driver
 
 easiest way is to manually change this file in you modules dir
-...node_modules/node-hid/binding.gyp
+`...node_modules/node-hid/binding.gyp`
 
 replace 'libusb' at very beginning
 ```  
@@ -148,4 +149,4 @@ with 'hidraw'
          'driver%': 'hidraw'
      },
 ```
-and do electron-rebuild (npm run erb), then copy new binary to app dir where needed
+and do electron-rebuild (`npm run erb`), then copy new binary to app dir where needed

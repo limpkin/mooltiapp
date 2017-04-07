@@ -31,6 +31,8 @@
     "release": "build",
     "postrelease": "node build/target.js --clean",
     "postinstall": "install-app-deps && electron-rebuild --force --module-dir app",
+    "win32": "build --win --ia32 --publish never --config.npmRebuild",
+    "linux32": "build --linux --ia32 --config.npmRebuild",
     "erb": "electron-rebuild --force --module-dir app",
     "subsync": "cd mooltipass && git pull && cd .. && node ./butil.js syncver",
     "sync": "node ./butil.js syncver",
@@ -65,7 +67,7 @@
   },
   "devDependencies": {
     "electron": "^1.6.5",
-    "electron-builder": "^16.7.0",
+    "electron-builder": "16.6.2",
     "electron-debug": "^1.1.0",
     "electron-rebuild": "^1.5.7",
     "pre-commit": "^1",
