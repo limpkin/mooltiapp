@@ -27,11 +27,7 @@ before_build:
 
 build_script:
   - yarn ciprep
-  - ps: if ($env:PLATFORM -like "x86") { $env:APPVEYOR_REPO_NAME=$env:APPVEYOR_REPO_NAME+"-32bit" }
-#  - echo %APPVEYOR_REPO_NAME%
-#  - dir \
-#  - dir %TEMP%
-  - dir app
+  - ps: if ($env:PLATFORM -like "x86") { $env:APPVEYOR_PROJECT_NAME=$env:APPVEYOR_PROJECT_NAME+"-32bit" }
   - yarn release
 
 test: off
