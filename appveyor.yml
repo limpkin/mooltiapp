@@ -20,13 +20,15 @@ clone_script:
   - cmd: git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass
 
 install:
-  - ps: Install-Product node 7 x64
+  - ps: Install-Product node 7
   - yarn install
 
 before_build:
 
 build_script:
-  - yarn run ciprep
-  - ps: if ($env:PLATFORM -like "x86") { $env:APPVEYOR_REPO_NAME=$env:APPVEYOR_REPO_NAME+"-32bit" }; yarn run release
+  - yarn ciprep
+  - ps: if ($env:PLATFORM -like "x86") { $env:APPVEYOR_REPO_NAME=$env:APPVEYOR_REPO_NAME+"-32bit" }
+  - echo %APPVEYOR_REPO_NAME%
+  - yarn release
 
 test: off
