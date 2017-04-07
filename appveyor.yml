@@ -2,6 +2,7 @@ version: 1.0.{build}
 
 platform:
   - x64
+  - x86
 
 cache:
   - node_modules
@@ -26,6 +27,6 @@ before_build:
 
 build_script:
   - yarn run ciprep
-  - yarn run release
+  - ps: if ($env:PLATFORM -like "x86") { $env:APPVEYOR_REPO_NAME=$env:APPVEYOR_REPO_NAME+"-32bit" }; yarn run release
 
 test: off
