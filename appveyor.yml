@@ -2,13 +2,13 @@ version: 1.0.{build}
 
 platform:
   - x64
-  - x86
+#  - x86
 
-#cache:
-#  - node_modules
-#  - '%APPDATA%\npm-cache'
-#  - '%USERPROFILE%\.electron'
-#  - '%LOCALAPPDATA%\Yarn'
+cache:
+  - node_modules
+  - '%APPDATA%\npm-cache'
+  - '%USERPROFILE%\.electron'
+  - '%LOCALAPPDATA%\Yarn'
 
 init:
   - git config --global core.autocrlf input
@@ -27,8 +27,9 @@ before_build:
 
 build_script:
   - yarn ciprep
-  - ps: if ($env:PLATFORM -like "x86") { $env:APPVEYOR_REPO_NAME=$env:APPVEYOR_REPO_NAME+"-32bit" }
-  - echo %APPVEYOR_REPO_NAME%
+#  - ps: if ($env:PLATFORM -like "x86") { $env:APPVEYOR_REPO_NAME=$env:APPVEYOR_REPO_NAME+"-32bit" }
+#  - echo %APPVEYOR_REPO_NAME%
+  - dir \
   - yarn release
 
 test: off
