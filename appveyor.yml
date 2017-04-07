@@ -20,7 +20,7 @@ clone_script:
   - cmd: git clone --depth=1 --branch=master https://github.com/limpkin/mooltipass.git mooltipass
 
 install:
-  - ps: Install-Product node 7
+  - ps: Install-Product node 7 $env:PLATFORM
   - yarn install
 
 before_build:
