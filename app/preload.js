@@ -125,7 +125,13 @@ var chrome = global.chrome = {
           })
         })
       } else {
-        dialog.showSaveDialog({defaultPath: options.suggestedName}, function (fileName) {
+        dialog.showSaveDialog({defaultPath: options.suggestedName }, function (fileName) {
+          // This SHOWSAVEDIALOG is meant to be compatible with Chrome's save dialog, for that reason, the createWriter function should be writen as:
+          // createWriter ( writer_object, error_callback, file_contents, file_writen_callback )
+
+          // Return if no filename
+          if (fileName === undefined) return;
+
           var writableFileEntry = {
             createWriter (writer) {
               var arrayBuffer
@@ -136,12 +142,13 @@ var chrome = global.chrome = {
                 var buf = new Buffer(arrayBuffer) // decode
                 // fs.writeFile( fileName , String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)) );
                 fs.writeFile(fileName, buf)
-                FileWritencallback(true)
+                if ( FileWritencallback ) FileWritencallback(true)
               }
 
-              fileReader.readAsArrayBuffer(arguments[2])
+              fileReader.readAsArrayBuffer( arguments[2] )
             }
           }
+
           callback(writableFileEntry)
         })
       }
@@ -209,6 +216,13 @@ chrome.hid = {
   },
   disconnect (connectionId, callback) {
     if (!connectionId) connectionId = this.connection
+
+    // Experimental, to check how it behaves in windows computers (shouldn't affect normal usage as any error is caught)
+    connectionId.removeAllListeners("error")
+    try {
+      connectionId.write([0x01, 0x00, 0x00]) // Makes device send an error message  
+    } catch(e) {}
+    
     connectionId.close()
     this.connection = false
     this.devices = []
