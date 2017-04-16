@@ -52,7 +52,7 @@
   "nsis": {
     "oneClick": true,
     "runAfterFinish": true,
-    "unicode": false
+    "unicode": true
   },
   "publish": [
     {

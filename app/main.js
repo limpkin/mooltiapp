@@ -13,12 +13,14 @@ let shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
   // https://electron.atom.io/docs/api/app/#appmakesingleinstancecallback
   if (mainWindow) {
     if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.show()
     mainWindow.focus()
   }
 })
 
 if (shouldQuit) {
   app.quit()
+  return
 }
 
 const path = require('path')
