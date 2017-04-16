@@ -43,6 +43,18 @@ var techniques = false
 // Simulate Chrome and set it global in Electron Environment
 var chrome = global.chrome = {
   runtime: {
+    le: null,
+    set lastError( val ) {
+      this.le = val
+    },
+    get lastError() {
+      if ( this.le === null || this.le === undefined ) return undefined
+
+      var toReturn = {
+        message: this.le
+      }
+      return toReturn
+    },
     onMessageExternal: new Event(null, [messageSchema, portSchema], options),
     onMessage: new Event(null, [messageSchema, portSchema], options),
     dispatchOnMessage (args) {
@@ -73,8 +85,7 @@ var chrome = global.chrome = {
         //console.log( (new Date()) + ' Connection send.', arguments[1] );
         connections[arguments[0]].send(JSON.stringify(arguments[1]))
       }
-    },
-    lastError: false
+    }
   },
   storage: {
     sync: {
@@ -125,7 +136,16 @@ var chrome = global.chrome = {
           })
         })
       } else {
-        dialog.showSaveDialog({defaultPath: options.suggestedName}, function (fileName) {
+        dialog.showSaveDialog({defaultPath: options.suggestedName }, function (fileName) {
+          chrome.runtime.lastError = undefined
+          // This SHOWSAVEDIALOG is meant to be compatible with Chrome's save dialog, for that reason, the createWriter function should be writen as:
+          // createWriter ( writer_object, error_callback, file_contents, file_writen_callback )
+
+          // Return if no filename
+          if (fileName === undefined) {
+            chrome.runtime.lastError = 'No filename selected'
+          } 
+
           var writableFileEntry = {
             createWriter (writer) {
               var arrayBuffer
@@ -136,12 +156,13 @@ var chrome = global.chrome = {
                 var buf = new Buffer(arrayBuffer) // decode
                 // fs.writeFile( fileName , String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)) );
                 fs.writeFile(fileName, buf)
-                FileWritencallback(true)
+                if ( FileWritencallback ) FileWritencallback(true)
               }
 
-              fileReader.readAsArrayBuffer(arguments[2])
+              fileReader.readAsArrayBuffer( arguments[2] )
             }
           }
+
           callback(writableFileEntry)
         })
       }
@@ -193,6 +214,7 @@ chrome.hid = {
   getUserSelectedDevices (options, callback) { // Not implemented as we are not using it
   },
   connect (deviceId, callback) {
+    chrome.runtime.lastError = undefined
     // Open a connection to an HID device for communication: https://developer.chrome.com/apps/hid#method-connect
     // console.log( 'connect', this.devices[deviceId].deviceId );
     try {
@@ -209,6 +231,13 @@ chrome.hid = {
   },
   disconnect (connectionId, callback) {
     if (!connectionId) connectionId = this.connection
+
+    // Experimental, to check how it behaves in windows computers (shouldn't affect normal usage as any error is caught)
+    connectionId.removeAllListeners("error")
+    try {
+      connectionId.write([0x01, 0x00, 0x00]) // Makes device send an error message  
+    } catch(e) {}
+    
     connectionId.close()
     this.connection = false
     this.devices = []
@@ -249,6 +278,8 @@ chrome.hid = {
     })
   },
   send (connectionId, reportId, data, callback) {
+    chrome.runtime.lastError = undefined
+    
     if (!connectionId) connectionId = this.connection
     try {
       connectionId.write(buf2hex(data))
