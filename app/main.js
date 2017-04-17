@@ -1,12 +1,31 @@
 'use strict'
 
+const electron = require('electron')
+const {app, Tray, dialog, Menu, systemPreferences} = electron
+
+// Prevent objects being garbage collected
+/** @type {Electron.BrowserWindow} */
+let mainWindow = null
+let tray = null
+
+let shouldQuit = app.makeSingleInstance((commandLine, workingDirectory) => {
+  // This callback is guaranteed to be executed after the "ready" event of app gets emitted
+  // https://electron.atom.io/docs/api/app/#appmakesingleinstancecallback
+  if (mainWindow) {
+    if (mainWindow.isMinimized()) mainWindow.restore()
+    mainWindow.show()
+    mainWindow.focus()
+  }
+})
+
+if (shouldQuit) {
+  app.quit()
+  return
+}
+
 const path = require('path')
 const url = require('url')
 const _ = require('lodash')
-
-const electron = require('electron')
-const {app, Tray, dialog, Menu, systemPreferences} = electron
-// const ipc = electron.ipcMain
 
 const windowStateKeeper = require('electron-window-state')
 const autoUpdater = require('electron-updater').autoUpdater
@@ -29,16 +48,6 @@ var techniques = {
 global.techniques = techniques
 
 let isHidden = false
-
-// Prevent objects being garbage collected
-/** @type {Electron.BrowserWindow} */
-let mainWindow = null
-let tray = null
-
-let shouldQuit = makeSingleInstance()
-if (shouldQuit) {
-  app.quit()
-}
 
 let isAutoStartEnabled = false
 let LoginItem = app.getLoginItemSettings()
@@ -299,17 +308,6 @@ function cmdShowApp () {
     mainWindow.show()
     if (process.platform === 'darwin') app.dock.show()
   }
-}
-
-// https://electron.atom.io/docs/api/app/#appmakesingleinstancecallback
-// The callback is guaranteed to be executed after the "ready" event of app gets emitted
-function makeSingleInstance () {
-  return app.makeSingleInstance((commandLine, workingDirectory) => {
-    if (mainWindow) {
-      if (mainWindow.isMinimized()) mainWindow.restore()
-      mainWindow.focus()
-    }
-  })
 }
 
 autoUpdater.on('update-downloaded', (event, info) => {
