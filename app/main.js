@@ -47,7 +47,9 @@ var techniques = {
 
 global.techniques = techniques
 
-let isHidden = false
+let isHidden = process.argv.includes('-m')
+
+console.log('Starting mode:', isHidden ? 'minimized' : 'normal')
 
 let isAutoStartEnabled = false
 let LoginItem = app.getLoginItemSettings()
