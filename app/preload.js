@@ -121,6 +121,12 @@ var chrome = global.chrome = {
     chooseEntry (options, callback) {
       if (options.type == 'openFile') {
         dialog.showOpenDialog(options, function (filePath) {
+          if (filePath === undefined || filePath.length == 0)
+          {
+              chrome.runtime.lastError = 'No filename selected'
+              callback(null)
+              return
+          }
           fs.readFile(filePath[0], function (err, data) {
             var mimicOutput = {
               name: filePath[0],
