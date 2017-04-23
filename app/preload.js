@@ -106,6 +106,7 @@ var chrome = global.chrome = {
     getServiceStatus (callback) {
       //console.log('syncFileSystem.getServiceStatus', arguments)
       $('.exportToCloud').closest('.storage').hide()
+      $('.importFromCloud').hide()
       global.mooltipass.device.shouldCheckForMoolticute = false
       global.mooltipass.device.usingMooltiApp = true
       callback('disabled')
