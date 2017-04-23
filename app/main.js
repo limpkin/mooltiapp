@@ -23,9 +23,10 @@ if (shouldQuit) {
   return
 }
 
+const fs = require('fs')
 const path = require('path')
 const url = require('url')
-const _ = require('lodash')
+const _merge = require('lodash/merge')
 
 const windowStateKeeper = require('electron-window-state')
 const autoUpdater = require('electron-updater').autoUpdater
@@ -56,6 +57,21 @@ let LoginItem = app.getLoginItemSettings()
 console.log('LoginItem', LoginItem)
 isAutoStartEnabled = LoginItem.openAtLogin
 
+// first run check
+const firstRunFile = path.join(app.getPath('userData'), '.firstrun')
+let isFirstRun = false
+
+try {
+  if(!fs.existsSync(firstRunFile)) throw new Error('ENOENT')
+} catch (e) {
+  // perform first run operations
+  isFirstRun = true
+  isHidden = true
+  isAutoStartEnabled = true
+  app.setLoginItemSettings({openAtLogin: isAutoStartEnabled, openAsHidden: true})
+  fs.writeFileSync(firstRunFile, '{"done":true}', 'utf8')
+}
+
 const pjson = require('./package.json')
 const appName = pjson.productName || pjson.name
 
@@ -72,7 +88,7 @@ process.on('uncaughtException', (e) => {
 // Load build target configuration file
 try {
   let config = require('./config.json')
-  _.merge(pjson.config, config)
+  _merge(pjson.config, config)
 } catch (e) {
   console.warn('No config file loaded, using defaults')
 }
