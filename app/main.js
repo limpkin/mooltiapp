@@ -61,15 +61,26 @@ isAutoStartEnabled = LoginItem.openAtLogin
 const firstRunFile = path.join(app.getPath('userData'), '.firstrun')
 let isFirstRun = false
 
+const setAutostartItem = enable => app.setLoginItemSettings({
+  openAtLogin: enable,
+  openAsHidden: true,
+  path: process.execPath,
+  args: '-m'
+})
+
 try {
-  if(!fs.existsSync(firstRunFile)) throw new Error('ENOENT')
+  if (!fs.existsSync(firstRunFile)) throw new Error('ENOENT')
 } catch (e) {
   // perform first run operations
   isFirstRun = true
-  isHidden = true
+  isHidden = false
   isAutoStartEnabled = true
-  app.setLoginItemSettings({openAtLogin: isAutoStartEnabled, openAsHidden: true})
+  setAutostartItem(isAutoStartEnabled)
   fs.writeFileSync(firstRunFile, '{"done":true}', 'utf8')
+}
+
+if (LoginItem.wasOpenedAtLogin) {
+  isHidden = true
 }
 
 const pjson = require('./package.json')
@@ -313,11 +324,7 @@ function getThemedTrayIcon () {
  */
 function cmdToggleAutostart (menuItem, browserWindow, event) {
   isAutoStartEnabled = !isAutoStartEnabled
-  let LoginItemSettings = {
-    openAtLogin: isAutoStartEnabled,
-    openAsHidden: true
-  }
-  app.setLoginItemSettings(LoginItemSettings)
+  setAutostartItem(isAutoStartEnabled)
   menuItem.checked = isAutoStartEnabled
 }
 
