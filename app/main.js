@@ -65,7 +65,7 @@ const setAutostartItem = enable => app.setLoginItemSettings({
   openAtLogin: enable,
   openAsHidden: true,
   path: process.execPath,
-  args: '-m'
+  args: ['-m']
 })
 
 try {
