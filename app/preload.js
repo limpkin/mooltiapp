@@ -135,8 +135,10 @@ var chrome = global.chrome = {
                 // Just leaving this for the first commit
                 // var str = buf2str( data );
                 // var blob = new Blob( data );
+                /* code below leads to a Maximum call stack size exceeded error 
                 var txt = String.fromCharCode.apply(null, new Uint8Array(data))
-                ownCallback(new Blob([txt]))
+                ownCallback(new Blob([txt]))*/
+                ownCallback(new Blob([new TextDecoder("utf-8").decode(new Uint8Array(data))]))
               }
             }
             callback(mimicOutput)
