@@ -381,7 +381,7 @@ var server = http.createServer(function (request, response) {
 })
 
 serverStartListening = function () {
-  server.listen(30035, function () {
+  server.listen({host: 'localhost', port: 30035}, function () {
     console.warn((new Date()) + ' Server is listening on port 30035')
   })
 }
